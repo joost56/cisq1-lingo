@@ -49,4 +49,33 @@ Feature: Guessing a word
   |  BAARD |  BARST  |  CORRECT, CORRECT, PRESENT, ABSENT, ABSENT            |
   |  BAARD |  DRAAD  |  ABSENT, PRESENT, CORRECT, PRESENT, CORRECT           |
   |  BAARD |  BAARD  |  CORRECT, CORRECT, CORRECT, CORRECT, CORRECT          |
-    
+
+  Scenario: Score gets increased
+  Given I am playing a game
+  When I guess the right word
+  Then I get a higher score
+
+  Scenario: User is finished
+  Given I am playing a game
+  When I didn't guess the right word after 5 guesses
+  Then I am out
+
+  Scenario: Double guess
+  Given I am playing a game
+  When I guess the same word twice
+  Then The word is not accepted and i have to guess again
+
+  Scenario: Can't play when you're out of the game
+  Given I am playing a game
+  When I finished the game
+  Then I can't guess another word
+
+  Scenario: Can't start round if you're guessing
+  Given I am playing a game
+  When I am guessing a word
+  Then I can't start a new round
+
+  Scenario: Can't start round if you don't have a game
+  Given I am playing a game
+  When I don't have a game
+  Then I can't start a new round
