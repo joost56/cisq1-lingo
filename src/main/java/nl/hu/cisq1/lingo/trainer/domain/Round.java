@@ -1,8 +1,11 @@
 package nl.hu.cisq1.lingo.trainer.domain;
 
+import nl.hu.cisq1.lingo.words.domain.Word;
+
 public class Round {
     private String wordToGuess;
     private int attempts;
+    private Feedback feedback;
 
     public Round(String wordToGuess, int attempts) {
         this.wordToGuess = wordToGuess;
@@ -13,15 +16,8 @@ public class Round {
         return wordToGuess;
     }
 
-    public void setWordToGuess(String wordToGuess) {
-        this.wordToGuess = wordToGuess;
-    }
-
-    public int getAttempts() {
-        return attempts;
-    }
-
-    public void setAttempts(int attempts) {
-        this.attempts = attempts;
-    }
+//    public String nextRound(){
+//        Word newWord = new Word();
+//
+//    }
 }
