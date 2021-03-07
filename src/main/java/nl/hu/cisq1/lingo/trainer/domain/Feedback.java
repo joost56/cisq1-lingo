@@ -10,6 +10,9 @@ public class Feedback {
         this.attempt = attempt;
         this.marks = marks;
     }
+    public Feedback(String attempt){
+        this.attempt = attempt;
+    }
     public Feedback(){}
 
     public boolean isWordGuessed(){
@@ -40,30 +43,63 @@ public class Feedback {
         return false;
     }
 
+    public List<Mark> getFeedback (String wordToGuess, String attempt) {
+        List<Mark> marks = new ArrayList<>();
+        if (wordToGuess.length() == attempt.length()) {
+            for(int i = 0; i < wordToGuess.length(); i++) {
+                Character kar = attempt.charAt(i);
+                Character kara = wordToGuess.charAt(i);
+                if (kar.toString().equals(kara.toString())) {
+                    marks.add(Mark.CORRECT);
+                } else if (!wordToGuess.contains(kar.toString())) {
+                    marks.add(Mark.ABSENT);
+                } else {
+                    marks.add(Mark.PRESENT);
+                }
+            }
+        }
+        else {
+            //invalid
+            int index = 0;
+            List<Mark> invalidMarksList = new ArrayList<>();
+            while (index < attempt.length()) {
+                invalidMarksList.add(Mark.INVALID);
+                index++;
+            }
+            return invalidMarksList;
+            }
+            return marks;
+    }
+
+
     public String giveHint(String previousHint, String wordToGuess, List<Mark> marks) {
         StringBuilder stringbuilder = new StringBuilder();
         int i = 0;
         while (i < wordToGuess.length()) {
             if (marks.get(i) == Mark.CORRECT) {
                 stringbuilder.append(wordToGuess.charAt(i));
-            }else{
+                i++;
+            } else {
                 stringbuilder.append('.');
-            }
-            i++;
-        }
-        StringBuilder theRealHint = new StringBuilder();
-        for (int index = 0; index < previousHint.length(); index++){
-            if (previousHint.charAt(index) != '.'){
-                theRealHint.append(previousHint.charAt(index));
-            }else if (stringbuilder.charAt(index) != '.'){
-                theRealHint.append(stringbuilder.charAt(index));
-            }else{
-                theRealHint.append('.');
+                i++;
             }
         }
+        if (previousHint.equals("null")) {
+            return stringbuilder.toString();
+        }
+            StringBuilder theRealHint = new StringBuilder();
+            for (int index = 0; index < previousHint.length(); index++) {
+                if (previousHint.charAt(index) != '.') {
+                    theRealHint.append(previousHint.charAt(index));
+                } else if (stringbuilder.charAt(index) != '.') {
+                    theRealHint.append(stringbuilder.charAt(index));
+                } else {
+                    theRealHint.append('.');
+                }
+            }
 
-        return theRealHint.toString();
-    }
+            return theRealHint.toString();
+        }
 
     @Override
     public boolean equals(Object o) {
@@ -81,9 +117,6 @@ public class Feedback {
 
     @Override
     public String toString() {
-        return "Feedback{" +
-                "attempt='" + attempt + '\'' +
-                ", mark=" + marks +
-                '}';
+        return "attempt = "+ attempt + ", marks = " + marks;
     }
 }
