@@ -29,16 +29,17 @@ class RoundTest {
     @ParameterizedTest
     @MethodSource("provideguessExamples")
     @DisplayName("give feedback")
-    void feedbackIsGiven(String attempt, String previousHint, String expectedFeedback){
+    void feedbackIsGiven(String attempt, String expectedFeedback){
         Round round = new Round("woord", 0);
+        round.startRound();
         assertEquals(expectedFeedback, round.guess(attempt));
     }
 
     static Stream<Arguments> provideguessExamples() {
         return Stream.of(
-                Arguments.of("woont", "w....", List.of(Mark.CORRECT, Mark.CORRECT, Mark.CORRECT, Mark.ABSENT, Mark.ABSENT) + "\n" + "woo.." ),
-                Arguments.of("worms", "woo..", List.of(Mark.CORRECT, Mark.CORRECT, Mark.PRESENT, Mark.ABSENT, Mark.ABSENT) + "\n" + "woo.."),
-                Arguments.of("woord", "woo..", "You guessed the word using " + 1 + "guess(es)"));
+                Arguments.of("woont", List.of(Mark.CORRECT, Mark.CORRECT, Mark.CORRECT, Mark.ABSENT, Mark.ABSENT) + "\n" + "woo.." ),
+                Arguments.of("worms", List.of(Mark.CORRECT, Mark.CORRECT, Mark.PRESENT, Mark.ABSENT, Mark.ABSENT) + "\n" + "wo..."),
+                Arguments.of("woord", "You guessed the word using " + 1 + "guess(es)"));
     }
 
     @Test

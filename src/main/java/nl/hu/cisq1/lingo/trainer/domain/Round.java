@@ -5,7 +5,7 @@ public class Round {
     private int attempts;
     private StringBuilder string = new StringBuilder();
     private Feedback feedback;
-    String previousHint;
+    String previousHint ="";
 
     public Round(String wordToGuess) {
         this.wordToGuess = wordToGuess;
@@ -20,7 +20,8 @@ public class Round {
         return attempts;
     }
 
-    public Feedback getFeedback() {
+    public Feedback getFeedback(String attempt) {
+        Feedback feedback = new Feedback(attempt);
         return feedback;
     }
 
