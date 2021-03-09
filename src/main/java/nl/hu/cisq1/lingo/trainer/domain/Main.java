@@ -5,15 +5,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-//public class Main {
-//    public static void main(String[] args) {
-//        Round round = new Round("woord");
-//            System.out.println(round.startRound());
-//            Scanner myObj = new Scanner(System.in);
-//            String attempt = myObj.nextLine();
-//            System.out.println(round.guess(attempt, round.getPreviousHint()));
-//
-//
-//
-//    }
-//}
+public class Main {
+    public static void main(String[] args) {
+        Round round = new Round("paard");
+        System.out.println(round.startRound());
+        System.out.println(round.guess("polen"));
+        System.out.println(round.guess("paris"));
+        System.out.println(round.guess("palok"));
+        System.out.println(round.guess("palod"));
+        System.out.println(round.guess("parad"));
+
+    }
+}

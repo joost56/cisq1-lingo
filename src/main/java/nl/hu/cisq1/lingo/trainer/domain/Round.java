@@ -5,6 +5,7 @@ public class Round {
     private int attempts;
     private StringBuilder string = new StringBuilder();
     private Feedback feedback;
+    String previousHint;
 
     public Round(String wordToGuess) {
         this.wordToGuess = wordToGuess;
@@ -19,6 +20,10 @@ public class Round {
         return attempts;
     }
 
+    public Feedback getFeedback() {
+        return feedback;
+    }
+
     public String startRound() {
         string.append(wordToGuess.charAt(0));
         int i = 0;
@@ -26,15 +31,19 @@ public class Round {
             string.append(".");
             i++;
         }
+        previousHint = string.toString();
         return string.toString();
     }
 
-    public String guess(String attempt, String previousHint) {
+    public String guess(String attempt) {
         if (attempts <= 4) {
             Feedback feedback = new Feedback(attempt);
             if (!attempt.equals(wordToGuess)) {
                 attempts = attempts + 1;
-                String totalHint = feedback.getFeedback(wordToGuess, attempt).toString() + "\n" + feedback.giveHint(previousHint, wordToGuess, feedback.getFeedback(wordToGuess, attempt));
+                String hint = feedback.giveHint(previousHint, wordToGuess, feedback.getFeedback(wordToGuess, attempt));
+                previousHint = hint;
+                String marks = feedback.getFeedback(wordToGuess, attempt).toString();
+                String totalHint = marks + "\n" + hint;
                 return totalHint;
             } else {
                 attempts = attempts + 1;

@@ -31,7 +31,7 @@ class RoundTest {
     @DisplayName("give feedback")
     void feedbackIsGiven(String attempt, String previousHint, String expectedFeedback){
         Round round = new Round("woord", 0);
-        assertEquals(expectedFeedback, round.guess(attempt, previousHint));
+        assertEquals(expectedFeedback, round.guess(attempt));
     }
 
     static Stream<Arguments> provideguessExamples() {
@@ -45,7 +45,7 @@ class RoundTest {
     @DisplayName("attempt limit reached")
     void attemptsHigherThenFive(){
         Round round = new Round("woord", 5);
-        assertEquals("you reached the limit of your guesses", round.guess("woont", "woo..."));
+        assertEquals("you reached the limit of your guesses", round.guess("woont"));
     };
 
     @Test
