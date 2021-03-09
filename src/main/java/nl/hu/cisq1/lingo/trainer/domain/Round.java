@@ -1,11 +1,21 @@
 package nl.hu.cisq1.lingo.trainer.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+@Entity
+@Table(name = "rounds")
 public class Round {
+
     private String wordToGuess;
     private int attempts;
     private StringBuilder string = new StringBuilder();
     private Feedback feedback;
-    String previousHint;
+    String previousHint ="";
+    private String id;
+
+    public Round (){}
 
     public Round(String wordToGuess) {
         this.wordToGuess = wordToGuess;
@@ -20,8 +30,8 @@ public class Round {
         return attempts;
     }
 
-    public Feedback getFeedback() {
-        return feedback;
+    public void setAttempts(int attempts) {
+        this.attempts = attempts;
     }
 
     public String startRound() {
@@ -47,7 +57,29 @@ public class Round {
                 return totalHint;
             } else {
                 attempts = attempts + 1;
-                return "You guessed the word using " + getAttempts() + "guess(es)";
+                return "You guessed the word using " + getAttempts() + " guess(es)";
             }
         }
-        return "you reached the limit of your guesses";}}
+        return "you reached the limit of your guesses";}
+
+    @Override
+    public String toString() {
+        return "Round{" +
+                "wordToGuess='" + wordToGuess + '\'' +
+                ", attempts=" + attempts +
+                ", feedback=" + feedback +
+                ", previousHint='" + previousHint + '\'' +
+                '}';
+       }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Id
+    @Column(name = "id")
+    public String getId() {
+        return id;
+    }
+
+}
