@@ -39,7 +39,7 @@ class RoundTest {
         return Stream.of(
                 Arguments.of("woont", List.of(Mark.CORRECT, Mark.CORRECT, Mark.CORRECT, Mark.ABSENT, Mark.ABSENT) + "\n" + "woo.." ),
                 Arguments.of("worms", List.of(Mark.CORRECT, Mark.CORRECT, Mark.PRESENT, Mark.ABSENT, Mark.ABSENT) + "\n" + "wo..."),
-                Arguments.of("woord", "You guessed the word using " + 1 + "guess(es)"));
+                Arguments.of("woord", "You guessed the word using " + 1 + " guess(es)"));
     }
 
     @Test
