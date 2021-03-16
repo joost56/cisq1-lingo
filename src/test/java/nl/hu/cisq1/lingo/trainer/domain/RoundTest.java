@@ -12,12 +12,12 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RoundTest {
-    @Test
-    @DisplayName("Start round")
-    void roundIsStarted(){
-        Round round = new Round("woord");
-        assertEquals(round.startRound(), "w....");
-    };
+//    @Test
+//    @DisplayName("Start round")
+//    void roundIsStarted(){
+//        Round round = new Round("woord");
+//        assertEquals(round.startRound(), "w....");
+//    };
 
 //    @Test
 //    @DisplayName("guess")
@@ -26,14 +26,14 @@ class RoundTest {
 //        assertEquals("w....", round.guess("welke", "w...."));
 //    }
 
-    @ParameterizedTest
-    @MethodSource("provideguessExamples")
-    @DisplayName("give feedback")
-    void feedbackIsGiven(String attempt, String expectedFeedback){
-        Round round = new Round("woord", 0);
-        round.startRound();
-        assertEquals(expectedFeedback, round.guess(attempt));
-    }
+//    @ParameterizedTest
+//    @MethodSource("provideguessExamples")
+//    @DisplayName("give feedback")
+//    void feedbackIsGiven(String attempt, String expectedFeedback){
+//        Round round = new Round("woord", 0);
+//        round.startRound();
+//        assertEquals(expectedFeedback, round.guess(attempt));
+//    }
 
     static Stream<Arguments> provideguessExamples() {
         return Stream.of(

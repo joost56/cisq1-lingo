@@ -46,19 +46,18 @@ public class Feedback {
     public List<Mark> getFeedback (String wordToGuess, String attempt) {
         List<Mark> marks = new ArrayList<>();
         if (wordToGuess.length() == attempt.length()) {
-            for(int i = 0; i < wordToGuess.length(); i++) {
+            for (int i = 0; i < wordToGuess.length(); i++) {
                 Character kar = attempt.charAt(i);
                 Character kara = wordToGuess.charAt(i);
                 if (kar.toString().equals(kara.toString())) {
                     marks.add(Mark.CORRECT);
                 } else if (!wordToGuess.contains(kar.toString())) {
                     marks.add(Mark.ABSENT);
-                } else {
+                } else{
                     marks.add(Mark.PRESENT);
                 }
             }
-        }
-        else {
+        } else {
             //invalid
             int index = 0;
             List<Mark> invalidMarksList = new ArrayList<>();
@@ -68,7 +67,7 @@ public class Feedback {
             }
             return invalidMarksList;
             }
-            return marks;
+        return marks;
     }
 
 
