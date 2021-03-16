@@ -1,19 +1,26 @@
 package nl.hu.cisq1.lingo.trainer.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 @Entity
 @Table(name = "rounds")
 public class Round {
-
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @Column
     private String wordToGuess;
+    @Column
     private int attempts;
+    @ManyToOne
+    @JoinColumn(name = "game_id", nullable = false)
+    private Game game;
+    @Transient
     private StringBuilder string = new StringBuilder();
-    private Feedback feedback;
-    String previousHint ="";
-    private String id;
+    @Column
+    private String previousHint;
+
 
     public Round (){}
 
@@ -67,19 +74,39 @@ public class Round {
         return "Round{" +
                 "wordToGuess='" + wordToGuess + '\'' +
                 ", attempts=" + attempts +
-                ", feedback=" + feedback +
                 ", previousHint='" + previousHint + '\'' +
                 '}';
        }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    @Id
-    @Column(name = "id")
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
+    public String getWordToGuess() {
+        return wordToGuess;
+    }
+
+    public void setWordToGuess(String wordToGuess) {
+        this.wordToGuess = wordToGuess;
+    }
+
+    public String getPreviousHint() {
+        return previousHint;
+    }
+
+    public void setPreviousHint(String previousHint) {
+        this.previousHint = previousHint;
+    }
 }
