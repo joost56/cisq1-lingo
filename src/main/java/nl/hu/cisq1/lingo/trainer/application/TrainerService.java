@@ -42,7 +42,6 @@ public class TrainerService {
         String show = game.startNewRound(round.getWordToGuess());
         round.setGame(game);
         round.setPreviousHint(show);
-        this.roundRepository.save(round);
         this.gameRepository.save(game);
         return show;
     }

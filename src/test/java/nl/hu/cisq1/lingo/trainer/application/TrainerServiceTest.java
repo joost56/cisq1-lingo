@@ -39,11 +39,13 @@ class TrainerServiceTest {
 //        SpringRoundRepository mockRespository = mock(SpringRoundRepository.class);
 //        SpringGameRepository gameRepository = mock(SpringGameRepository.class);
 //        Game game = new Game();
+//        game.startNewGame();
 //        Round round = new Round();
 //        when(mockRespository.save(round)).thenReturn(new Round());
-//        round.startRound();
+//        game.startNewRound(round.getWordToGuess());
 //
 //        TrainerService service = new TrainerService(wordService, gameRepository, mockRespository);
+//        service.startNewRound(game.getId().longValue());
 //        Round result = service.startNewRound(game.getId().longValue());
 //
 //        assertEquals(round, result);
