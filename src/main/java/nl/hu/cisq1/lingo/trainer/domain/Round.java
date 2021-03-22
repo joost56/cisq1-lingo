@@ -13,14 +13,13 @@ public class Round {
     private String wordToGuess;
     @Column
     private int attempts;
-    @ManyToOne
-    @JoinColumn(name = "game_id", nullable = false)
-    private Game game;
     @Transient
     private StringBuilder string = new StringBuilder();
     @Column
     private String previousHint;
-
+    @ManyToOne
+    @JoinColumn(name ="FK_GameId")
+    private Game game;
 
     public Round (){}
 
@@ -35,10 +34,6 @@ public class Round {
 
     public int getAttempts() {
         return attempts;
-    }
-
-    public void setAttempts(int attempts) {
-        this.attempts = attempts;
     }
 
     public String startRound() {
@@ -78,14 +73,6 @@ public class Round {
                 '}';
        }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
     public Game getGame() {
         return game;
     }
@@ -98,15 +85,11 @@ public class Round {
         return wordToGuess;
     }
 
-    public void setWordToGuess(String wordToGuess) {
-        this.wordToGuess = wordToGuess;
+    public void setPreviousHint(String previousHint) {
+        this.previousHint = previousHint;
     }
 
     public String getPreviousHint() {
         return previousHint;
-    }
-
-    public void setPreviousHint(String previousHint) {
-        this.previousHint = previousHint;
     }
 }

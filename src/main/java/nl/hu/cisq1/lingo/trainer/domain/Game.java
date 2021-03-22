@@ -1,6 +1,7 @@
 package nl.hu.cisq1.lingo.trainer.domain;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,9 +15,10 @@ public class Game {
     private int score;
     @Column
     private String gameStatus;
-    @OneToMany
-    @JoinColumn(name = "rounds_id", nullable = false)
-    private List<Round> rounds;
+    @OneToMany(mappedBy="game", cascade = CascadeType.ALL)
+    private List<Round> rounds = new ArrayList<>();
+    @Transient
+    private List<Round> ronde = new ArrayList<>();
 
     public Game(){}
 
@@ -39,6 +41,7 @@ public class Game {
     public String startNewRound(String word){
         Round round = new Round(word);
         String show = round.startRound();
+        ronde.add(round);
         setGameStatus(GameStatus.PLAYING.toString());
         return show;
     }
@@ -68,7 +71,11 @@ public class Game {
     }
 
 
-    public List<Round> getRounds() {
+    public List<Round> getRonde() {
+        return ronde;
+    }
+
+    public List<Round> getRounds(){
         return rounds;
     }
 

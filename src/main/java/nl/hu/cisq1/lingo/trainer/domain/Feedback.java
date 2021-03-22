@@ -83,9 +83,6 @@ public class Feedback {
                 i++;
             }
         }
-        if (previousHint.equals("null")) {
-            return stringbuilder.toString();
-        }
             StringBuilder theRealHint = new StringBuilder();
             for (int index = 0; index < previousHint.length(); index++) {
                 if (previousHint.charAt(index) != '.') {
