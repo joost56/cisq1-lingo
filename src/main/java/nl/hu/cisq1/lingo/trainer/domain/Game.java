@@ -28,14 +28,17 @@ public class Game {
     }
 
     public String guess (String attempt, Round round){
-        String guess = round.guess(attempt);
-        if (guess.equals("you reached the limit of your guesses")) {
-            gameStatus = GameStatus.ELIMINATED.toString();
-        } else if (guess.equals("You guessed the word using " + round.getAttempts() + " guess(es)")) {
-            score = score + 5* (5-round.getAttempts()) + 5;
-            gameStatus = GameStatus.WAITING_FOR_ROUND.toString();
-        }
-        return guess;
+        if (gameStatus != GameStatus.ELIMINATED.toString()) {
+            String guess = round.guess(attempt);
+            if (guess.equals("you reached the limit of your guesses")) {
+                gameStatus = GameStatus.ELIMINATED.toString();
+            } else if (guess.equals("You guessed the word using " + round.getAttempts() + " guess(es)")) {
+                score = score + 5* (5-round.getAttempts()) + 5;
+                gameStatus = GameStatus.WAITING_FOR_ROUND.toString();
+            }
+            return guess;
+            }
+        return "You have been eliminated, start a new game";
     }
 
     public String startNewRound(String word){

@@ -7,9 +7,13 @@ import nl.hu.cisq1.lingo.trainer.domain.Round;
 import nl.hu.cisq1.lingo.trainer.domain.exception.GameIdNotFoundException;
 import nl.hu.cisq1.lingo.trainer.domain.exception.RoundIdNotFoundException;
 import nl.hu.cisq1.lingo.words.application.WordService;
+import nl.hu.cisq1.lingo.words.data.SpringWordRepository;
+import nl.hu.cisq1.lingo.words.domain.Word;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -19,11 +23,13 @@ public class TrainerService {
     private WordService wordService;
     private SpringGameRepository gameRepository;
     private SpringRoundRepository roundRepository;
+    private SpringWordRepository wordRepository;
 
-    public TrainerService(WordService wordService, SpringGameRepository gameRepository, SpringRoundRepository roundRepository) {
+    public TrainerService(WordService wordService, SpringGameRepository gameRepository, SpringRoundRepository roundRepository, SpringWordRepository wordRepository) {
         this.wordService = wordService;
         this.gameRepository = gameRepository;
         this.roundRepository = roundRepository;
+        this.wordRepository = wordRepository;
     }
 
     public Game startNewGame() {
@@ -34,7 +40,8 @@ public class TrainerService {
     }
 
     public Game getGameById(Long id) {
-        Game game = gameRepository.findById(id).orElseThrow(() -> new GameIdNotFoundException(id));;
+        Game game = gameRepository.findById(id).orElseThrow(() -> new GameIdNotFoundException(id));
+        ;
         return game;
     }
 
@@ -50,7 +57,7 @@ public class TrainerService {
             } else if (lastWord.get().length() == 7) {
                 wordLength = 5;
             }
-        }catch (NoSuchElementException e) {
+        } catch (NoSuchElementException e) {
             wordLength = 5;
         }
         if (game.getGameStatus() == GameStatus.ELIMINATED.toString()) {
@@ -66,14 +73,26 @@ public class TrainerService {
         }
     }
 
-    public String guess (String attempt, Long roundId){
+    public String guess(String attempt, Long roundId) {
         Round round = this.roundRepository.findById(roundId).orElseThrow(() -> new RoundIdNotFoundException(roundId));
         Long gameId = round.getGame().getId();
         Game game = this.gameRepository.findById(gameId).orElseThrow(() -> new GameIdNotFoundException(gameId));
-        String show = game.guess(attempt, round);
-        this.gameRepository.save(game);
-        this.roundRepository.save(round);
-        return show;
-    }
+        List<Word> words = wordRepository.findAll();
+        if (game.getGameStatus() == GameStatus.ELIMINATED.toString()) {
+            this.gameRepository.save(game);
+            this.roundRepository.save(round);
+            return "You have been eliminated, start a new game";
+        } else if (game.getGameStatus() != GameStatus.ELIMINATED.toString() && words.toString().contains(attempt)) {
+            this.gameRepository.save(game);
+            this.roundRepository.save(round);
+            return game.guess(attempt, round);
+        } else {
+            game.setGameStatus(GameStatus.ELIMINATED.toString());
+            this.gameRepository.save(game);
+            this.roundRepository.save(round);
+            return "This word does not exist in this trainer";
+        }
 
+
+    }
 }
