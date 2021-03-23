@@ -58,8 +58,7 @@ class FeedbackTest {
                 Arguments.of("woo..", "woord", List.of(Mark.ABSENT, Mark.ABSENT, Mark.ABSENT, Mark.ABSENT, Mark.CORRECT), "woo.d"),
                 Arguments.of("wo...", "woord", List.of(Mark.ABSENT, Mark.ABSENT, Mark.CORRECT, Mark.ABSENT, Mark.CORRECT), "woo.d"),
                 Arguments.of("w....", "woord", List.of(Mark.CORRECT, Mark.CORRECT, Mark.CORRECT, Mark.ABSENT, Mark.CORRECT), "woo.d"),
-                Arguments.of("woo.d", "woord", List.of(Mark.ABSENT, Mark.CORRECT, Mark.ABSENT, Mark.ABSENT, Mark.ABSENT), "woo.d"),
-                Arguments.of("null", "woord", List.of(Mark.CORRECT, Mark.ABSENT, Mark.ABSENT, Mark.ABSENT, Mark.ABSENT), "w...."));
+                Arguments.of("woo.d", "woord", List.of(Mark.ABSENT, Mark.CORRECT, Mark.ABSENT, Mark.ABSENT, Mark.ABSENT), "woo.d"));
     }
 
     @ParameterizedTest
