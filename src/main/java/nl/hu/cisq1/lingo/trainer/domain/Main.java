@@ -12,9 +12,15 @@ public class Main {
         System.out.println(game.getGameStatus());
         System.out.println(game.guess("poaaa", round));
         System.out.println(game.guess("ploih", round));
-        System.out.println(game.guess("paard", round));
+        System.out.println(game.guess("paaop", round));
         System.out.println(game.getScore());
-        System.out.println(game.guess("paard", round));
+        System.out.println(game.getGameStatus());
+        System.out.println(game.guess("piurd", round));
+        System.out.println(game.getGameStatus());
+        if (game.getGameStatus() == GameStatus.ELIMINATED.toString()) {
+            System.out.println("slecht");
+        }
+
 
     }
 }
