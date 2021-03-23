@@ -48,21 +48,25 @@ public class Round {
     }
 
     public String guess(String attempt) {
-        if (attempts <= 4) {
-            Feedback feedback = new Feedback(attempt);
-            if (!attempt.equals(wordToGuess)) {
-                attempts = attempts + 1;
-                String hint = feedback.giveHint(previousHint, wordToGuess, feedback.getFeedback(wordToGuess, attempt));
-                previousHint = hint;
-                String marks = feedback.getFeedback(wordToGuess, attempt).toString();
-                String totalHint = marks + "\n" + hint;
-                return totalHint;
-            } else {
-                attempts = attempts + 1;
-                return "You guessed the word using " + getAttempts() + " guess(es)";
+        if (game.getGameStatus() != GameStatus.ELIMINATED.toString()) {
+            if (attempts <= 4) {
+                Feedback feedback = new Feedback(attempt);
+                if (!attempt.equals(wordToGuess)) {
+                    attempts = attempts + 1;
+                    String hint = feedback.giveHint(previousHint, wordToGuess, feedback.getFeedback(wordToGuess, attempt));
+                    previousHint = hint;
+                    String marks = feedback.getFeedback(wordToGuess, attempt).toString();
+                    String totalHint = marks + "\n" + hint;
+                    return totalHint;
+                } else {
+                    attempts = attempts + 1;
+                    return "You guessed the word using " + getAttempts() + " guess(es)";
+                }
             }
+            return "you reached the limit of your guesses";
         }
-        return "you reached the limit of your guesses";}
+        return "You have been eliminated, start a new game";
+    }
 
     @Override
     public String toString() {

@@ -5,22 +5,10 @@ public class Main {
         Game game = new Game();
         game.startNewRound("paard");
         Round round = game.getRonde().get(0);
-        System.out.println(round);
-        System.out.println(game.guess("pppop", round));
-        System.out.println(game.guess("pakke", round));
-        System.out.println(round);
-        System.out.println(game.getGameStatus());
-        System.out.println(game.guess("poaaa", round));
-        System.out.println(game.guess("ploih", round));
-        System.out.println(game.guess("paaop", round));
-        System.out.println(game.getScore());
-        System.out.println(game.getGameStatus());
-        System.out.println(game.guess("piurd", round));
-        System.out.println(game.getGameStatus());
-        if (game.getGameStatus() == GameStatus.ELIMINATED.toString()) {
-            System.out.println("slecht");
-        }
-
-
+        System.out.println(game.guess("pasar", round));
+        System.out.println(game.guess("parwa", round));
+        System.out.println(game.guess("party", round));
+        System.out.println(game.guess("pasja", round));
+        System.out.println(game.guess("passe", round));
     }
 }

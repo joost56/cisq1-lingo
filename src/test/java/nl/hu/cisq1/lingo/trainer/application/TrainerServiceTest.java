@@ -5,6 +5,7 @@ import nl.hu.cisq1.lingo.trainer.data.SpringRoundRepository;
 import nl.hu.cisq1.lingo.trainer.domain.Game;
 import nl.hu.cisq1.lingo.trainer.domain.Round;
 import nl.hu.cisq1.lingo.words.application.WordService;
+import nl.hu.cisq1.lingo.words.data.SpringWordRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -22,11 +23,12 @@ class TrainerServiceTest {
         WordService wordService = mock(WordService.class);
         SpringGameRepository mockRespository = mock(SpringGameRepository.class);
         SpringRoundRepository roundRepository = mock(SpringRoundRepository.class);
+        SpringWordRepository wordRepository = mock(SpringWordRepository.class);
         Game game = new Game();
         when(mockRespository.save(game)).thenReturn(new Game());
         game.startNewGame();
 
-        TrainerService service = new TrainerService(wordService, mockRespository, roundRepository);
+        TrainerService service = new TrainerService(wordService, mockRespository, roundRepository, wordRepository);
         Game result = service.startNewGame();
 
         assertEquals(game, result);
