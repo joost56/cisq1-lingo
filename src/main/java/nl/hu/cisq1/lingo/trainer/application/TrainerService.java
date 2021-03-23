@@ -2,6 +2,7 @@ package nl.hu.cisq1.lingo.trainer.application;
 import nl.hu.cisq1.lingo.trainer.data.SpringGameRepository;
 import nl.hu.cisq1.lingo.trainer.data.SpringRoundRepository;
 import nl.hu.cisq1.lingo.trainer.domain.Game;
+import nl.hu.cisq1.lingo.trainer.domain.GameStatus;
 import nl.hu.cisq1.lingo.trainer.domain.Round;
 import nl.hu.cisq1.lingo.trainer.domain.exception.GameIdNotFoundException;
 import nl.hu.cisq1.lingo.trainer.domain.exception.RoundIdNotFoundException;
@@ -9,6 +10,8 @@ import nl.hu.cisq1.lingo.words.application.WordService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -35,15 +38,32 @@ public class TrainerService {
         return game;
     }
 
-    public String startNewRound(Long gameId){
-        Round round = new Round(wordService.provideRandomWord(5));
+    public String startNewRound(Long gameId) {
         Game game = this.gameRepository.findById(gameId).orElseThrow(() -> new GameIdNotFoundException(gameId));
-        game.setRound(round);
-        String show = game.startNewRound(round.getWordToGuess());
-        round.setGame(game);
-        round.setPreviousHint(show);
-        this.gameRepository.save(game);
-        return show;
+        Optional<String> lastWord = roundRepository.findLastWord(gameId);
+        int wordLength = 5;
+        try {
+            if (lastWord.get().length() == 5) {
+                wordLength = 6;
+            } else if (lastWord.get().length() == 6) {
+                wordLength = 7;
+            } else if (lastWord.get().length() == 7) {
+                wordLength = 5;
+            }
+        }catch (NoSuchElementException e) {
+            wordLength = 5;
+        }
+        if (game.getGameStatus() == GameStatus.ELIMINATED.toString()) {
+            return "You are eliminated, start a new game";
+        } else {
+            Round round = new Round(wordService.provideRandomWord(wordLength));
+            game.setRound(round);
+            String show = game.startNewRound(round.getWordToGuess());
+            round.setGame(game);
+            round.setPreviousHint(show);
+            this.gameRepository.save(game);
+            return show;
+        }
     }
 
     public String guess (String attempt, Long roundId){
