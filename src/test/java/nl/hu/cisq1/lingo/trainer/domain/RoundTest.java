@@ -12,28 +12,29 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RoundTest {
-//    @Test
-//    @DisplayName("Start round")
-//    void roundIsStarted(){
-//        Round round = new Round("woord");
-//        assertEquals(round.startRound(), "w....");
-//    };
+    @Test
+    @DisplayName("Start round")
+    void roundIsStarted(){
+        Round round = new Round("woord");
+        assertEquals(round.startRound(), "w....");
+    };
 
-//    @Test
-//    @DisplayName("guess")
-//    void guess(){
-//        Round round = new Round("woord");
-//        assertEquals("w....", round.guess("welke", "w...."));
-//    }
+    @Test
+    @DisplayName("guess")
+    void guess(){
+        Round round = new Round("woord");
+        round.startRound();
+        assertEquals("[CORRECT, ABSENT, PRESENT, ABSENT, ABSENT]\nw....", round.guess("warme"));
+    }
 
-//    @ParameterizedTest
-//    @MethodSource("provideguessExamples")
-//    @DisplayName("give feedback")
-//    void feedbackIsGiven(String attempt, String expectedFeedback){
-//        Round round = new Round("woord", 0);
-//        round.startRound();
-//        assertEquals(expectedFeedback, round.guess(attempt));
-//    }
+    @ParameterizedTest
+    @MethodSource("provideguessExamples")
+    @DisplayName("give feedback")
+    void feedbackIsGiven(String attempt, String expectedFeedback){
+        Round round = new Round("woord", 0);
+        round.startRound();
+        assertEquals(expectedFeedback, round.guess(attempt));
+    }
 
     static Stream<Arguments> provideguessExamples() {
         return Stream.of(
@@ -56,6 +57,7 @@ class RoundTest {
         assertEquals(0, round.getAttempts());
     }
 
+    @Test
     public void testToString()
     {
         Round round = new Round();

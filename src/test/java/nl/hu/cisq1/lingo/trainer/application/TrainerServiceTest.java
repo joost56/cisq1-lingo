@@ -21,14 +21,16 @@ class TrainerServiceTest {
     @DisplayName("Start a new game")
     void providesGame(){
         WordService wordService = mock(WordService.class);
-        SpringGameRepository mockRespository = mock(SpringGameRepository.class);
+        SpringGameRepository gameRespository = mock(SpringGameRepository.class);
         SpringRoundRepository roundRepository = mock(SpringRoundRepository.class);
         SpringWordRepository wordRepository = mock(SpringWordRepository.class);
+        TrainerService service = new TrainerService(wordService, gameRespository, roundRepository, wordRepository);
+
+        when(wordService.provideRandomWord(5)).thenReturn("appel");
         Game game = new Game();
-        when(mockRespository.save(game)).thenReturn(new Game());
         game.startNewGame();
 
-        TrainerService service = new TrainerService(wordService, mockRespository, roundRepository, wordRepository);
+
         Game result = service.startNewGame();
 
         assertEquals(game, result);
