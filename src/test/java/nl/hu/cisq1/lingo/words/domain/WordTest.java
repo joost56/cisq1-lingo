@@ -1,5 +1,6 @@
 package nl.hu.cisq1.lingo.words.domain;
 
+import nl.hu.cisq1.lingo.trainer.domain.Round;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,5 +14,13 @@ class WordTest {
         Word word = new Word("woord");
         int length = word.getLength();
         assertEquals(5, length);
+    }
+
+    @Test
+    public void testToString()
+    {
+        Word word = new Word();
+        String expected = word.getValue();
+        assertEquals(expected, word.toString());
     }
 }

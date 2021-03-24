@@ -48,7 +48,6 @@ public class Round {
     }
 
     public String guess(String attempt) {
-        if (game.getGameStatus() != GameStatus.ELIMINATED.toString()) {
             if (attempts <= 4) {
                 Feedback feedback = new Feedback(attempt);
                 if (!attempt.equals(wordToGuess)) {
@@ -65,8 +64,6 @@ public class Round {
             }
             return "you reached the limit of your guesses";
         }
-        return "You have been eliminated, start a new game";
-    }
 
     @Override
     public String toString() {

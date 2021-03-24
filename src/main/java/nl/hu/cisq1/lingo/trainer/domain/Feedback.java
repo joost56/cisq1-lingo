@@ -67,36 +67,30 @@ public class Feedback {
             }
             return invalidMarksList;
             }
-        int counterAttemptPresent = 0;
-        int counterWordToGuessPresent = 0;
+
         for (int index = 0; index < marks.size(); index++) {
+            int counterAttemptPresent = 0;
+            int counterWordToGuessPresent = 0;
             if (marks.get(index) == Mark.PRESENT) {
                 Character letterVanDePresent = attempt.charAt(index);
-                for (int in = 0; in < attempt.length(); in++) {
-                    if (attempt.charAt(in) == letterVanDePresent) {
+
+                for (int i = 0; i < attempt.length(); i++) {
+                    if (attempt.charAt(i) == letterVanDePresent) {
                         counterAttemptPresent = counterAttemptPresent+ 1;
                     }
                 }
+
                 for (int in = 0; in < wordToGuess.length(); in++) {
                     if (wordToGuess.charAt(in)  == letterVanDePresent) {
                         counterWordToGuessPresent = counterWordToGuessPresent+1;
                     }
                 }
-                if (counterAttemptPresent != counterWordToGuessPresent) {
-                    int verschil = counterAttemptPresent - counterWordToGuessPresent;
-                    for (int ind = 0; ind < marks.size(); ind++) {
-                        if(attempt.charAt(ind) == letterVanDePresent) {
-                            if (marks.get(ind) == Mark.PRESENT) {
-                                marks.set(ind, Mark.ABSENT);
-                                counterAttemptPresent = counterWordToGuessPresent -1;
-                            }
-                        }
 
+                if (counterAttemptPresent != counterWordToGuessPresent) {
+                    marks.set(index, Mark.ABSENT);
                     }
                 }
             }
-        }
-
             return marks;
     }
 
