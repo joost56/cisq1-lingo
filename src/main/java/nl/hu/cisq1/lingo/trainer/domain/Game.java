@@ -22,6 +22,10 @@ public class Game {
 
     public Game(){}
 
+    public Game(Long id) {
+        this.id = id;
+    }
+
     public void startNewGame(){
         setScore(0);
         gameStatus = GameStatus.WAITING_FOR_ROUND.toString();
@@ -62,14 +66,13 @@ public class Game {
         return gameStatus;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Long getId() {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public List<Round> getRonde() {
         return ronde;
@@ -82,6 +85,7 @@ public class Game {
     public void setRound(Round round) {
         rounds.add(round);
     }
+
 
 
     @Override

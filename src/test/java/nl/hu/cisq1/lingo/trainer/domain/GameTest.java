@@ -13,14 +13,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GameTest {
-//    @ParameterizedTest
-//    @MethodSource("provideGuessExamples")
-//    @DisplayName("give guess")
-//    void guessIsGiven(String attempt, String actualWord, String expectedReturn){
-//        Game game = new Game();
-//        game.startNewRound(actualWord);
-//        assertEquals(expectedReturn, game.guess(attempt, game.getRounds().get(0)));
-//    };
+    @ParameterizedTest
+    @MethodSource("provideGuessExamples")
+    @DisplayName("give guess")
+    void guessIsGiven(String attempt, String actualWord, String expectedReturn){
+        Game game = new Game();
+        game.startNewGame();
+        game.startNewRound(actualWord);
+        assertEquals(expectedReturn, game.guess(attempt, game.getRonde().get(0)));
+    };
 
     static Stream<Arguments> provideGuessExamples() {
         return Stream.of(
@@ -29,8 +30,7 @@ public class GameTest {
                 Arguments.of("wonen", "woord", "[CORRECT, CORRECT, ABSENT, ABSENT, ABSENT]\nwo..."),
                 Arguments.of("wonen", "woord", "[CORRECT, CORRECT, ABSENT, ABSENT, ABSENT]\nwo..."),
                 Arguments.of("wonen", "woord", "[CORRECT, CORRECT, ABSENT, ABSENT, ABSENT]\nwo..."),
-                Arguments.of("wonen", "woord", "[CORRECT, CORRECT, ABSENT, ABSENT, ABSENT]\nwo..."),
-                Arguments.of("wonen", "woord", "you reached the limit of your guesses"));
+                Arguments.of("wonen", "woord", "[CORRECT, CORRECT, ABSENT, ABSENT, ABSENT]\nwo..."));
 
     }
 

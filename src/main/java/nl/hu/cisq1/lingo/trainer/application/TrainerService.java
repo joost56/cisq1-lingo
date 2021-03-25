@@ -41,8 +41,12 @@ public class TrainerService {
 
     public Game getGameById(Long id) {
         Game game = gameRepository.findById(id).orElseThrow(() -> new GameIdNotFoundException(id));
-        ;
         return game;
+    }
+
+    public Round getRoundById(Long id) {
+        Round round = roundRepository.findById(id).orElseThrow(() -> new RoundIdNotFoundException(id));
+        return round;
     }
 
     public String startNewRound(Long gameId) {
