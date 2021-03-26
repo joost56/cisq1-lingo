@@ -19,6 +19,8 @@ public class Game {
     private List<Round> rounds = new ArrayList<>();
     @Transient
     private List<Round> ronde = new ArrayList<>();
+    @Transient
+    private Progress progress = new Progress();
 
     public Game(){}
 
@@ -29,6 +31,7 @@ public class Game {
     public void startNewGame(){
         setScore(0);
         gameStatus = GameStatus.WAITING_FOR_ROUND.toString();
+
     }
 
     public String guess (String attempt, Round round) {
@@ -47,6 +50,9 @@ public class Game {
         String show = round.startRound();
         ronde.add(round);
         setGameStatus(GameStatus.PLAYING.toString());
+        progress.setScore(score);
+        progress.setHints(round.getPreviousHint());
+
         return show;
     }
 
