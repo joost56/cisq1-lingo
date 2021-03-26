@@ -4,6 +4,7 @@ public class Progress {
     private int score;
     private String hints;
     private int roundnumber;
+    private String message;
 
     public Progress(){}
 
@@ -37,8 +38,12 @@ public class Progress {
         this.roundnumber = roundnumber;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     @Override
     public String toString() {
-        return "Score: " + score + "\nHints: " + hints + "Roundnumber: " + roundnumber;
+        return "Message: " + message + "\nScore: " + score + "\nHints: " + hints + "\nRoundnumber: " + roundnumber;
     }
 }

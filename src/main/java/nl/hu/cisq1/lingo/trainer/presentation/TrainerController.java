@@ -39,7 +39,7 @@ public class TrainerController {
     }
 
     @PutMapping("/guess/{roundId}")
-    public String guess(@PathVariable Long roundId, @RequestBody TrainerDTO trainerDTO)
+    public Progress guess(@PathVariable Long roundId, @RequestBody TrainerDTO trainerDTO)
     {
         return trainerService.guess(trainerDTO.attempt, roundId);
     }

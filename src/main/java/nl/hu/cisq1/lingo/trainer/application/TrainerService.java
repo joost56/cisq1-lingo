@@ -78,7 +78,7 @@ public class TrainerService {
         }
     }
 
-    public String guess(String attempt, Long roundId) {
+    public Progress guess(String attempt, Long roundId) {
         Round round = this.roundRepository.findById(roundId).orElseThrow(() -> new RoundIdNotFoundException(roundId));
         Long gameId = round.getGame().getId();
         Game game = this.gameRepository.findById(gameId).orElseThrow(() -> new GameIdNotFoundException(gameId));
@@ -86,16 +86,23 @@ public class TrainerService {
         if (game.getGameStatus() == GameStatus.ELIMINATED.toString()) {
             this.gameRepository.save(game);
             this.roundRepository.save(round);
-            return "You have been eliminated, start a new game";
-        } else if (game.getGameStatus() != GameStatus.ELIMINATED.toString() && words.toString().contains(attempt)) {
+            Progress progress = game.getProgress();
+            progress.setMessage("You have been eliminated, start a new game");
+            return progress;
+        } else if (!game.getGameStatus().equals(GameStatus.ELIMINATED.toString()) && words.toString().contains(attempt)) {
             this.gameRepository.save(game);
             this.roundRepository.save(round);
-            return game.guess(attempt, round);
+            game.guess(attempt, round);
+            Progress progress = game.getProgress();
+            progress.setMessage("Guess again");
+            return progress;
         } else {
             game.setGameStatus(GameStatus.ELIMINATED.toString());
             this.gameRepository.save(game);
             this.roundRepository.save(round);
-            return "This word does not exist in this trainer";
+            Progress progress = game.getProgress();
+            progress.setMessage("This word does not exist in this trainer");
+            return progress;
         }
 
 
