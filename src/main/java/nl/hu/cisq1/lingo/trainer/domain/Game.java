@@ -31,29 +31,30 @@ public class Game {
     public void startNewGame(){
         setScore(0);
         gameStatus = GameStatus.WAITING_FOR_ROUND.toString();
-
     }
 
-    public String guess (String attempt, Round round) {
+    public Progress guess (String attempt, Round round) {
         String guess = round.guess(attempt);
+        progress.setHints(guess);
+        progress.setMessage("Guess again");
         if (guess.equals("you reached the limit of your guesses")) {
             gameStatus = GameStatus.ELIMINATED.toString();
         } else if (guess.equals("You guessed the word using " + round.getAttempts() + " guess(es)")) {
             score = score + 5 * (5 - round.getAttempts()) + 5;
             gameStatus = GameStatus.WAITING_FOR_ROUND.toString();
         }
-        return guess;
+        return progress;
     }
 
-    public String startNewRound(String word){
+    public Progress startNewRound(String word){
         Round round = new Round(word);
-        String show = round.startRound();
+        round.startRound();
         ronde.add(round);
         setGameStatus(GameStatus.PLAYING.toString());
         progress.setScore(score);
         progress.setHints(round.getPreviousHint());
-
-        return show;
+        progress.setRoundnumber(ronde.size());
+        return progress;
     }
 
     public void setScore(int score) {
@@ -93,6 +94,9 @@ public class Game {
     }
 
 
+    public Progress getProgress() {
+        return progress;
+    }
 
     @Override
     public boolean equals(Object o) {
