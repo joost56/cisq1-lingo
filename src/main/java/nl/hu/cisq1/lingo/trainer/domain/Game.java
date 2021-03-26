@@ -45,15 +45,15 @@ public class Game {
         return guess;
     }
 
-    public String startNewRound(String word){
+    public Progress startNewRound(String word){
         Round round = new Round(word);
-        String show = round.startRound();
+        round.startRound();
         ronde.add(round);
         setGameStatus(GameStatus.PLAYING.toString());
         progress.setScore(score);
         progress.setHints(round.getPreviousHint());
-
-        return show;
+        progress.setRoundnumber(ronde.size());
+        return progress;
     }
 
     public void setScore(int score) {
@@ -93,6 +93,9 @@ public class Game {
     }
 
 
+    public Progress getProgress() {
+        return progress;
+    }
 
     @Override
     public boolean equals(Object o) {

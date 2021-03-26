@@ -3,6 +3,7 @@ package nl.hu.cisq1.lingo.trainer.presentation;
 import nl.hu.cisq1.lingo.trainer.application.TrainerService;
 import nl.hu.cisq1.lingo.trainer.domain.Feedback;
 import nl.hu.cisq1.lingo.trainer.domain.Game;
+import nl.hu.cisq1.lingo.trainer.domain.Progress;
 import nl.hu.cisq1.lingo.trainer.domain.Round;
 import nl.hu.cisq1.lingo.trainer.presentation.DTO.TrainerDTO;
 import nl.hu.cisq1.lingo.words.application.WordService;
@@ -32,7 +33,7 @@ public class TrainerController {
     }
 
     @PutMapping(value = "/startRound/{id}")
-    public String startRound(@PathVariable Long id)
+    public Progress startRound(@PathVariable Long id)
     {
         return trainerService.startNewRound(id);
     }

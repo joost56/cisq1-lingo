@@ -3,6 +3,7 @@ import nl.hu.cisq1.lingo.trainer.data.SpringGameRepository;
 import nl.hu.cisq1.lingo.trainer.data.SpringRoundRepository;
 import nl.hu.cisq1.lingo.trainer.domain.Game;
 import nl.hu.cisq1.lingo.trainer.domain.GameStatus;
+import nl.hu.cisq1.lingo.trainer.domain.Progress;
 import nl.hu.cisq1.lingo.trainer.domain.Round;
 import nl.hu.cisq1.lingo.trainer.domain.exception.GameIdNotFoundException;
 import nl.hu.cisq1.lingo.trainer.domain.exception.RoundIdNotFoundException;
@@ -49,7 +50,7 @@ public class TrainerService {
         return round;
     }
 
-    public String startNewRound(Long gameId) {
+    public Progress startNewRound(Long gameId) {
         Game game = this.gameRepository.findById(gameId).orElseThrow(() -> new GameIdNotFoundException(gameId));
         Optional<String> lastWord = roundRepository.findLastWord(gameId);
         int wordLength = 5;
@@ -65,13 +66,13 @@ public class TrainerService {
             wordLength = 5;
         }
         if (game.getGameStatus() == GameStatus.ELIMINATED.toString()) {
-            return "You are eliminated, start a new game";
+            return game.getProgress();
         } else {
             Round round = new Round(wordService.provideRandomWord(wordLength));
             game.setRound(round);
-            String show = game.startNewRound(round.getWordToGuess());
+            Progress show = game.startNewRound(round.getWordToGuess());
             round.setGame(game);
-            round.setPreviousHint(show);
+            round.setPreviousHint(show.getHints());
             this.gameRepository.save(game);
             return show;
         }
