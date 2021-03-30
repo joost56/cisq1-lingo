@@ -1,5 +1,6 @@
 package nl.hu.cisq1.lingo.trainer.application;
 import nl.hu.cisq1.lingo.trainer.data.SpringGameRepository;
+import nl.hu.cisq1.lingo.trainer.data.SpringProgressRepository;
 import nl.hu.cisq1.lingo.trainer.data.SpringRoundRepository;
 import nl.hu.cisq1.lingo.trainer.domain.Game;
 import nl.hu.cisq1.lingo.trainer.domain.GameStatus;
@@ -25,19 +26,22 @@ public class TrainerService {
     private SpringGameRepository gameRepository;
     private SpringRoundRepository roundRepository;
     private SpringWordRepository wordRepository;
+    private SpringProgressRepository progressRepository;
 
-    public TrainerService(WordService wordService, SpringGameRepository gameRepository, SpringRoundRepository roundRepository, SpringWordRepository wordRepository) {
+    public TrainerService(WordService wordService, SpringGameRepository gameRepository, SpringRoundRepository roundRepository, SpringWordRepository wordRepository, SpringProgressRepository progressRepository) {
         this.wordService = wordService;
         this.gameRepository = gameRepository;
         this.roundRepository = roundRepository;
         this.wordRepository = wordRepository;
+        this.progressRepository = progressRepository;
     }
 
-    public Game startNewGame() {
+    public Progress startNewGame() {
         Game game = new Game();
-        game.startNewGame();
+        Progress progress = game.startNewGame();
         this.gameRepository.save(game);
-        return game;
+        startNewRound(game.getId());
+        return progress;
     }
 
     public Game getGameById(Long id) {
@@ -54,27 +58,30 @@ public class TrainerService {
         Game game = this.gameRepository.findById(gameId).orElseThrow(() -> new GameIdNotFoundException(gameId));
         Optional<String> lastWord = roundRepository.findLastWord(gameId);
         int wordLength = 5;
-        try {
-            if (lastWord.get().length() == 5) {
-                wordLength = 6;
-            } else if (lastWord.get().length() == 6) {
-                wordLength = 7;
-            } else if (lastWord.get().length() == 7) {
+        if (lastWord.isPresent()) {
+            try {
+                if (lastWord.get().length() == 5) {
+                    wordLength = 6;
+                } else if (lastWord.get().length() == 6) {
+                    wordLength = 7;
+                } else if (lastWord.get().length() == 7) {
+                    wordLength = 5;
+                }
+            } catch (NoSuchElementException e) {
                 wordLength = 5;
             }
-        } catch (NoSuchElementException e) {
-            wordLength = 5;
         }
-        if (game.getGameStatus() == GameStatus.ELIMINATED.toString()) {
+        if (game.getGameStatus().equals(GameStatus.ELIMINATED.toString())) {
             return game.getProgress();
         } else {
             Round round = new Round(wordService.provideRandomWord(wordLength));
             game.setRound(round);
-            Progress show = game.startNewRound(round.getWordToGuess());
+            Progress progress = game.startNewRound(round.getWordToGuess());
             round.setGame(game);
-            round.setPreviousHint(show.getHints());
+            round.setPreviousHint(progress.getHints());
             this.gameRepository.save(game);
-            return show;
+            this.progressRepository.save(progress);
+            return progress;
         }
     }
 
@@ -83,25 +90,26 @@ public class TrainerService {
         Long gameId = round.getGame().getId();
         Game game = this.gameRepository.findById(gameId).orElseThrow(() -> new GameIdNotFoundException(gameId));
         List<Word> words = wordRepository.findAll();
-        if (game.getGameStatus() == GameStatus.ELIMINATED.toString()) {
+        Progress progress = game.getProgress();
+        if (game.getGameStatus().equals(GameStatus.ELIMINATED.toString())) {
+            progress.setMessage(GameStatus.ELIMINATED.toString());
+            progress.setRoundnumber(roundRepository.countRoundsByGameId(gameId).get().size());
             this.gameRepository.save(game);
             this.roundRepository.save(round);
-            Progress progress = game.getProgress();
-            progress.setMessage("You have been eliminated, start a new game");
             return progress;
         } else if (!game.getGameStatus().equals(GameStatus.ELIMINATED.toString()) && words.toString().contains(attempt)) {
+            progress.setMessage(GameStatus.PLAYING.toString());
+            progress.setRoundnumber(roundRepository.countRoundsByGameId(gameId).get().size());
+            game.guess(attempt, round);
             this.gameRepository.save(game);
             this.roundRepository.save(round);
-            game.guess(attempt, round);
-            Progress progress = game.getProgress();
-            progress.setMessage("Guess again");
             return progress;
         } else {
             game.setGameStatus(GameStatus.ELIMINATED.toString());
+            progress.setMessage(GameStatus.ELIMINATED.toString());
+            progress.setRoundnumber(roundRepository.countRoundsByGameId(gameId).get().size());
             this.gameRepository.save(game);
             this.roundRepository.save(round);
-            Progress progress = game.getProgress();
-            progress.setMessage("This word does not exist in this trainer");
             return progress;
         }
 

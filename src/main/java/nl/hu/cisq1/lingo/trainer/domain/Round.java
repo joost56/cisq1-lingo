@@ -55,7 +55,7 @@ public class Round {
                     String hint = feedback.giveHint(previousHint, wordToGuess, feedback.getFeedback(wordToGuess, attempt));
                     previousHint = hint;
                     String marks = feedback.getFeedback(wordToGuess, attempt).toString();
-                    String totalHint = marks + "\n" + hint;
+                    String totalHint = marks + ", " + hint;
                     return totalHint;
                 } else {
                     attempts = attempts + 1;
@@ -92,5 +92,9 @@ public class Round {
 
     public String getPreviousHint() {
         return previousHint;
+    }
+
+    public Long getId() {
+        return id;
     }
 }
