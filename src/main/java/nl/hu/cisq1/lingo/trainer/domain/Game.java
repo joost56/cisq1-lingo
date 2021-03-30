@@ -1,5 +1,6 @@
 package nl.hu.cisq1.lingo.trainer.domain;
 
+import javassist.NotFoundException;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
@@ -21,7 +22,9 @@ public class Game {
     private List<Round> rounds = new ArrayList<>();
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name ="FK_ProgressId")
-    private Progress progress;
+    private Progress progress = new Progress();
+    @Transient
+    private List<Round> rondes = new ArrayList<>();
 
     public Game(){}
 
@@ -48,9 +51,10 @@ public class Game {
         return progress;
     }
 
-    public Progress startNewRound(String word){
+    public Progress startNewRound(String word) {
         Round round = new Round(word);
         round.startRound();
+        rondes.add(round);
         setGameStatus(GameStatus.PLAYING.toString());
         progress.setScore(score);
         progress.setHints(round.getPreviousHint());
@@ -91,6 +95,9 @@ public class Game {
         rounds.add(round);
     }
 
+    public List<Round> getRondes() {
+        return rondes;
+    }
 
     public Progress getProgress() {
         return progress;

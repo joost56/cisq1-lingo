@@ -13,25 +13,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GameTest {
-    @ParameterizedTest
-    @MethodSource("provideGuessExamples")
-    @DisplayName("give guess")
-    void guessIsGiven(String attempt, String actualWord, String expectedReturn){
-        Game game = new Game();
-        game.startNewGame();
-        game.startNewRound("woord");
-        assertEquals(game.getProgress(), game.guess("woord", game.getRounds().get(0)));
-    };
-
-    static Stream<Arguments> provideGuessExamples() {
-        return Stream.of(
-                Arguments.of("woord", "woord", "Message: Guess again\nScore: 0\nHints: You guessed the word using 1 guess(es)\nRoundnumber: 1"),
-                Arguments.of("wonen", "woord", "Message: Guess again\nScore: 0\nHints: [CORRECT, CORRECT, ABSENT, ABSENT, ABSENT]\nwo...\n" + "Roundnumber: 1"),
-                Arguments.of("wonen", "woord", "Message: Guess again\nScore: 0\nHints: [CORRECT, CORRECT, ABSENT, ABSENT, ABSENT]\nwo...\n" + "Roundnumber: 1"),
-                Arguments.of("wonen", "woord", "Message: Guess again\nScore: 0\nHints: [CORRECT, CORRECT, ABSENT, ABSENT, ABSENT]\nwo...\n" + "Roundnumber: 1"),
-                Arguments.of("wonen", "woord", "Message: Guess again\nScore: 0\nHints: [CORRECT, CORRECT, ABSENT, ABSENT, ABSENT]\nwo...\n" + "Roundnumber: 1"),
-                Arguments.of("wonen", "woord", "Message: Guess again\nScore: 0\nHints: [CORRECT, CORRECT, ABSENT, ABSENT, ABSENT]\nwo...\n" + "Roundnumber: 1"));
-    }
+//    @Test
+//    @DisplayName("give guess")
+//    void guessIsGiven(){
+//        Game game = new Game();
+//        game.startNewGame();
+//        game.startNewRound("woord");
+//        assertEquals("Message: WAITING_FOR_ROUND\n" +
+//                "Score: 25\n" +
+//                "Hints: You guessed the word using 1 guess(es)\n" +
+//                "Roundnumber: 0", game.guess("woord", game.getRondes().get(0)));
+//    };
 
     @Test
     public void testToString()

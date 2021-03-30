@@ -23,7 +23,7 @@ class TrainerServiceIntegrationTest {
     @DisplayName("A new round is started when a new game is started")
     void providesNewGame() {
         Progress progress = service.startNewGame();
-        assertEquals(GameStatus.PLAYING, progress.getMessage());
+        assertEquals(GameStatus.PLAYING.toString(), progress.getMessage());
         assertEquals(0, progress.getScore());
         assertEquals(5, progress.getHints().length());
         assertEquals(1, progress.getRoundnumber());
