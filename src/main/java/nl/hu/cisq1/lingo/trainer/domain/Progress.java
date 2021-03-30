@@ -34,6 +34,13 @@ public class Progress {
         this.message = message;
     }
 
+    public void setPrgress(int score, String hints, int roundnumber, String message) {
+        this.score = score;
+        this.hints = hints;
+        this.roundnumber = roundnumber;
+        this.message = message;
+    }
+
     public void setScore(int score) {
         this.score = score;
     }
