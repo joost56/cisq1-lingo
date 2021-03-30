@@ -24,7 +24,7 @@ class RoundTest {
     void guess(){
         Round round = new Round("woord");
         round.startRound();
-        assertEquals("[CORRECT, ABSENT, PRESENT, ABSENT, ABSENT]\nw....", round.guess("warme"));
+        assertEquals("[CORRECT, ABSENT, PRESENT, ABSENT, ABSENT], w....", round.guess("warme"));
     }
 
     @ParameterizedTest
@@ -38,8 +38,8 @@ class RoundTest {
 
     static Stream<Arguments> provideguessExamples() {
         return Stream.of(
-                Arguments.of("woont", List.of(Mark.CORRECT, Mark.CORRECT, Mark.CORRECT, Mark.ABSENT, Mark.ABSENT) + "\n" + "woo.." ),
-                Arguments.of("worms", List.of(Mark.CORRECT, Mark.CORRECT, Mark.PRESENT, Mark.ABSENT, Mark.ABSENT) + "\n" + "wo..."),
+                Arguments.of("woont", List.of(Mark.CORRECT, Mark.CORRECT, Mark.CORRECT, Mark.ABSENT, Mark.ABSENT) + ", " + "woo.." ),
+                Arguments.of("worms", List.of(Mark.CORRECT, Mark.CORRECT, Mark.PRESENT, Mark.ABSENT, Mark.ABSENT) + ", " + "wo..."),
                 Arguments.of("woord", "You guessed the word using " + 1 + " guess(es)"));
     }
 

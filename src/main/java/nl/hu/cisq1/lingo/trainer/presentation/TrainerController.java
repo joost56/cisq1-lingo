@@ -21,7 +21,7 @@ public class TrainerController {
     }
 
     @PostMapping("/startGame")
-    public Game startGame()
+    public Progress startGame()
     {
         return trainerService.startNewGame();
     }

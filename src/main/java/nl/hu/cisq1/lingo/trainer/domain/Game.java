@@ -1,5 +1,7 @@
 package nl.hu.cisq1.lingo.trainer.domain;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,31 +19,31 @@ public class Game {
     private String gameStatus;
     @OneToMany(mappedBy="game", cascade = CascadeType.ALL)
     private List<Round> rounds = new ArrayList<>();
-    @Transient
-    private List<Round> ronde = new ArrayList<>();
-    @Transient
-    private Progress progress = new Progress();
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name ="FK_ProgressId")
+    private Progress progress;
 
     public Game(){}
 
-    public Game(Long id) {
-        this.id = id;
-    }
-
-    public void startNewGame(){
+    public Progress startNewGame(){
         setScore(0);
         gameStatus = GameStatus.WAITING_FOR_ROUND.toString();
+        progress = new Progress(0, null, 0, GameStatus.WAITING_FOR_ROUND.toString());
+        return progress;
     }
 
     public Progress guess (String attempt, Round round) {
         String guess = round.guess(attempt);
         progress.setHints(guess);
-        progress.setMessage("Guess again");
+        progress.setRoundnumber(rounds.size());
         if (guess.equals("you reached the limit of your guesses")) {
             gameStatus = GameStatus.ELIMINATED.toString();
+            progress.setMessage(GameStatus.ELIMINATED.toString());
         } else if (guess.equals("You guessed the word using " + round.getAttempts() + " guess(es)")) {
             score = score + 5 * (5 - round.getAttempts()) + 5;
             gameStatus = GameStatus.WAITING_FOR_ROUND.toString();
+            progress.setMessage(GameStatus.WAITING_FOR_ROUND.toString());
+            progress.setScore(score);
         }
         return progress;
     }
@@ -49,11 +51,11 @@ public class Game {
     public Progress startNewRound(String word){
         Round round = new Round(word);
         round.startRound();
-        ronde.add(round);
         setGameStatus(GameStatus.PLAYING.toString());
         progress.setScore(score);
         progress.setHints(round.getPreviousHint());
-        progress.setRoundnumber(ronde.size());
+        progress.setRoundnumber(rounds.size());
+        progress.setMessage(GameStatus.PLAYING.toString());
         return progress;
     }
 
@@ -79,10 +81,6 @@ public class Game {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public List<Round> getRonde() {
-        return ronde;
     }
 
     public List<Round> getRounds(){
