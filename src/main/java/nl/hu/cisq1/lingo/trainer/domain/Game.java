@@ -6,6 +6,7 @@ import org.hibernate.annotations.Cascade;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Entity(name = "game")
@@ -22,9 +23,8 @@ public class Game {
     private List<Round> rounds = new ArrayList<>();
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name ="FK_ProgressId")
-    private Progress progress = new Progress();
-    @Transient
-    private List<Round> rondes = new ArrayList<>();
+    private Progress progress;
+
 
     public Game(){}
 
@@ -36,31 +36,55 @@ public class Game {
     }
 
     public Progress guess (String attempt, Round round) {
-        String guess = round.guess(attempt);
-        progress.setHints(guess);
-        progress.setRoundnumber(rounds.size());
-        if (guess.equals("you reached the limit of your guesses")) {
-            gameStatus = GameStatus.ELIMINATED.toString();
-            progress.setMessage(GameStatus.ELIMINATED.toString());
-        } else if (guess.equals("You guessed the word using " + round.getAttempts() + " guess(es)")) {
-            score = score + 5 * (5 - round.getAttempts()) + 5;
-            gameStatus = GameStatus.WAITING_FOR_ROUND.toString();
+        if (round.getRoundStatus().equals(RoundStatus.IN_PROGRESS.toString())) {
+            String guess = round.guess(attempt);
+            progress.setHints(guess);
+            progress.setRoundnumber(rounds.size());
+            if (guess.contains("you reached the limit of your guesses")) {
+                progress.setMessage(GameStatus.ELIMINATED.toString());
+                round.setRoundStatus(RoundStatus.FAILED.toString());
+            } else if (guess.equals("You guessed the word using " + round.getAttempts() + " guess(es)")) {
+                score = score + 5 * (5 - round.getAttempts()) + 5;
+                gameStatus = GameStatus.WAITING_FOR_ROUND.toString();
+                progress.setMessage(GameStatus.WAITING_FOR_ROUND.toString());
+                progress.setScore(score);
+                round.setRoundStatus(RoundStatus.COMPLETED.toString());
+            }
+    }else if (round.getRoundStatus().equals(RoundStatus.COMPLETED.toString()) || round.getRoundStatus().equals(RoundStatus.FAILED.toString())) {
             progress.setMessage(GameStatus.WAITING_FOR_ROUND.toString());
-            progress.setScore(score);
+            round.setAttempts(round.getAttempts() - 1);
+            return progress;
         }
         return progress;
     }
 
     public Progress startNewRound(String word) {
-        Round round = new Round(word);
-        round.startRound();
-        rondes.add(round);
-        setGameStatus(GameStatus.PLAYING.toString());
-        progress.setScore(score);
-        progress.setHints(round.getPreviousHint());
-        progress.setRoundnumber(rounds.size());
-        progress.setMessage(GameStatus.PLAYING.toString());
-        return progress;
+        if (!gameStatus.equals(GameStatus.ELIMINATED.toString())) {
+            Round round = new Round(word);
+            round.startRound();
+            rounds.add(round);
+            setGameStatus(GameStatus.PLAYING.toString());
+            progress.setScore(score);
+            progress.setHints(round.getPreviousHint());
+            progress.setRoundnumber(rounds.size());
+            progress.setMessage(GameStatus.PLAYING.toString());
+            return progress;
+        }else {
+            return progress;
+        }
+    }
+
+    public Integer getNextWordLength(){
+        if (rounds.size() == 0) {
+            return 5;
+        }
+        else if (rounds.get(rounds.size()-1).getWordToGuess().length() == 5) {
+            return 6;
+        } else if (rounds.get(rounds.size()-1).getWordToGuess().length() == 6) {
+            return 7;
+        }else{
+            return 5;
+        }
     }
 
     public void setScore(int score) {
@@ -93,10 +117,6 @@ public class Game {
 
     public void setRound(Round round) {
         rounds.add(round);
-    }
-
-    public List<Round> getRondes() {
-        return rondes;
     }
 
     public Progress getProgress() {

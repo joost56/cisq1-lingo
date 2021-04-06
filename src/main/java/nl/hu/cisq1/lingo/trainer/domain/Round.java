@@ -10,16 +10,18 @@ public class Round {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column
+    private String roundStatus;
+    @Column
     private String wordToGuess;
     @Column
     private int attempts;
-    @Transient
-    private StringBuilder string = new StringBuilder();
     @Column
     private String previousHint;
     @ManyToOne
     @JoinColumn(name ="FK_GameId")
     private Game game;
+    @Transient
+    private StringBuilder string = new StringBuilder();
 
     public Round (){}
 
@@ -44,6 +46,7 @@ public class Round {
             i++;
         }
         previousHint = string.toString();
+        roundStatus = RoundStatus.IN_PROGRESS.toString();
         return string.toString();
     }
 
@@ -56,9 +59,13 @@ public class Round {
                     previousHint = hint;
                     String marks = feedback.getFeedback(wordToGuess, attempt).toString();
                     String totalHint = marks + ", " + hint;
+                    if (attempts == 5) {
+                        return totalHint + ", you reached the limit of your guesses";
+                    }
                     return totalHint;
                 } else {
                     attempts = attempts + 1;
+                    roundStatus = RoundStatus.COMPLETED.toString();
                     return "You guessed the word using " + getAttempts() + " guess(es)";
                 }
             }
@@ -93,6 +100,14 @@ public class Round {
     public String getPreviousHint() {
         return previousHint;
     }
+
+    public void setAttempts(int attempts) {this.attempts = attempts;}
+
+    public String getRoundStatus() {
+        return roundStatus;
+    }
+
+    public void setRoundStatus(String roundStatus){this.roundStatus = roundStatus;}
 
     public Long getId() {
         return id;

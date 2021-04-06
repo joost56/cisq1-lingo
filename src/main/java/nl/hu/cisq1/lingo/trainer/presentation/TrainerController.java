@@ -38,9 +38,9 @@ public class TrainerController {
         return trainerService.startNewRound(id);
     }
 
-    @PutMapping("/guess/{roundId}")
-    public Progress guess(@PathVariable Long roundId, @RequestBody TrainerDTO trainerDTO)
+    @PutMapping("/guess/{roundId}/{gameId}")
+    public Progress guess(@PathVariable Long roundId, @PathVariable Long gameId,  @RequestBody TrainerDTO trainerDTO)
     {
-        return trainerService.guess(trainerDTO.attempt, roundId);
+        return trainerService.guess(trainerDTO.attempt, roundId, gameId);
     }
 }

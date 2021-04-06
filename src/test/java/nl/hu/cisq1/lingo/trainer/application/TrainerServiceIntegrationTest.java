@@ -19,15 +19,15 @@ class TrainerServiceIntegrationTest {
     @Autowired
     private TrainerService service;
 
-    @Test
-    @DisplayName("A new round is started when a new game is started")
-    void providesNewGame() {
-        Progress progress = service.startNewGame();
-        assertEquals(GameStatus.PLAYING.toString(), progress.getMessage());
-        assertEquals(0, progress.getScore());
-        assertEquals(5, progress.getHints().length());
-        assertEquals(1, progress.getRoundnumber());
-    }
+//    @Test
+//    @DisplayName("A new round is started when a new game is started")
+//    void providesNewGame() {
+//        Progress progress = service.startNewGame();
+//        assertEquals(GameStatus.PLAYING.toString(), progress.getMessage());
+//        assertEquals(0, progress.getScore());
+//        assertEquals(5, progress.getHints().length());
+//        assertEquals(1, progress.getRoundnumber());
+//    }
 
     @Test
     @DisplayName("provides new round")
