@@ -19,11 +19,21 @@ public class GameTest {
 //        Game game = new Game();
 //        game.startNewGame();
 //        game.startNewRound("woord");
-//        assertEquals("Message: WAITING_FOR_ROUND\n" +
-//                "Score: 25\n" +
-//                "Hints: You guessed the word using 1 guess(es)\n" +
-//                "Roundnumber: 0", game.guess("woord", game.getRondes().get(0)));
+//        Round round = game.getRounds().get(0);
+//        assertEquals("Message: WAITING_FOR_ROUND\nScore: 25\nHints: You guessed the word using 1 guess(es)\nRoundnumber: 0", game.guess("woord", game.getRounds().get(0)).toString());
+//        round.setAttempts(4);
 //    };
+
+//    @Test
+//    @DisplayName("No playing possible in finished round")
+//    void roundIsFinished(){
+//        Game game = new Game();
+//        game.startNewGame();
+//        game.startNewRound("woord");
+//        game.guess("woord", game.getRounds().get(0));
+//        game.guess("woord", game.getRounds().get(0));
+//        assertEquals("Message: WAITING_FOR_ROUND\nScore: 25\nHints: You guessed the word using 1 guess(es)\nRoundnumber: 0", game.getProgress().toString());
+//    }
 
     @Test
     public void testToString()

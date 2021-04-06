@@ -21,20 +21,11 @@ public class Progress {
     private int roundnumber;
     @Column
     private String message;
-    @JoinColumn
-    @OneToOne(cascade = CascadeType.ALL)
-    private Game game;
+
 
     public Progress(){}
 
     public Progress(int score, String hints, int roundnumber, String message) {
-        this.score = score;
-        this.hints = hints;
-        this.roundnumber = roundnumber;
-        this.message = message;
-    }
-
-    public void setPrgress(int score, String hints, int roundnumber, String message) {
         this.score = score;
         this.hints = hints;
         this.roundnumber = roundnumber;
