@@ -58,7 +58,6 @@ public class Feedback {
                 }
             }
         } else {
-            //invalid
             int index = 0;
             List<Mark> invalidMarksList = new ArrayList<>();
             while (index < attempt.length()) {
@@ -67,31 +66,27 @@ public class Feedback {
             }
             return invalidMarksList;
             }
-
         for (int index = 0; index < marks.size(); index++) {
             int counterAttemptPresent = 0;
             int counterWordToGuessPresent = 0;
             if (marks.get(index) == Mark.PRESENT) {
                 Character letterVanDePresent = attempt.charAt(index);
-
                 for (int i = 0; i < attempt.length(); i++) {
                     if (attempt.charAt(i) == letterVanDePresent) {
                         counterAttemptPresent = counterAttemptPresent+ 1;
                     }
                 }
-
                 for (int in = 0; in < wordToGuess.length(); in++) {
                     if (wordToGuess.charAt(in)  == letterVanDePresent) {
                         counterWordToGuessPresent = counterWordToGuessPresent+1;
                     }
                 }
-
                 if (counterAttemptPresent != counterWordToGuessPresent) {
                     marks.set(index, Mark.ABSENT);
                     }
                 }
             }
-            return marks;
+        return marks;
     }
 
 
@@ -117,7 +112,6 @@ public class Feedback {
                     theRealHint.append('.');
                 }
             }
-
             return theRealHint.toString();
         }
 

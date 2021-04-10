@@ -13,23 +13,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GameTest {
-//    @Test
-//    @DisplayName("give guess")
-//    void guessIsGiven(){
-//        Game game = new Game();
-//        game.startNewGame();
-//        game.startNewRound("woord");
-//        Round round = game.getRounds().get(0);
-//        assertEquals("Message: WAITING_FOR_ROUND\nScore: 25\nHints: You guessed the word using 1 guess(es)\nRoundnumber: 0", game.guess("woord", game.getRounds().get(0)).toString());
-//        round.setAttempts(4);
-//    };
+    @Test
+    @DisplayName("give guess")
+    void guessIsGiven(){
+        Game game = new Game("woord");
+        Round round = game.getRounds().get(0);
+        assertEquals("[CORRECT, CORRECT, CORRECT, CORRECT, CORRECT], woord", game.guess("woord", game.getRounds().get(0)));
+        round.setAttempts(4);
+    };
 
 //    @Test
 //    @DisplayName("No playing possible in finished round")
 //    void roundIsFinished(){
-//        Game game = new Game();
-//        game.startNewGame();
-//        game.startNewRound("woord");
+//        Game game = new Game("woord");
 //        game.guess("woord", game.getRounds().get(0));
 //        game.guess("woord", game.getRounds().get(0));
 //        assertEquals("Message: WAITING_FOR_ROUND\nScore: 25\nHints: You guessed the word using 1 guess(es)\nRoundnumber: 0", game.getProgress().toString());
@@ -48,11 +44,11 @@ public class GameTest {
         assertEquals(expected, game.toString());
     }
 
-    @Test
-    public void testHashcodeAndEquals() {
-        Game game = new Game();
-        Game game1 = new Game();
-        assertTrue(game.equals(game1) && game1.equals(game));
-        assertTrue(game.hashCode() == game1.hashCode());
-    }
+//    @Test
+//    public void testHashcodeAndEquals() {
+//        Game game = new Game("woord");
+//        Game game1 = new Game("woord");
+//        assertTrue(game.equals(game1) && game1.equals(game));
+//        assertTrue(game.hashCode() == game1.hashCode());
+//    }
 }

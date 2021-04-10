@@ -27,6 +27,7 @@ public class Round {
 
     public Round(String wordToGuess) {
         this.wordToGuess = wordToGuess;
+        startRound();
     }
 
     public Round(String wordToGuess, int attempts) {
@@ -56,19 +57,28 @@ public class Round {
                 if (!attempt.equals(wordToGuess)) {
                     attempts = attempts + 1;
                     String hint = feedback.giveHint(previousHint, wordToGuess, feedback.getFeedback(wordToGuess, attempt));
-                    previousHint = hint;
                     String marks = feedback.getFeedback(wordToGuess, attempt).toString();
                     String totalHint = marks + ", " + hint;
+                    if (marks.contains(Mark.INVALID)){
+                        previousHint = marks + ", " + wordToGuess.charAt(0) + "....";
+                    } else {
+                        previousHint = hint;
+                    }
                     if (attempts == 5) {
+                        roundStatus = RoundStatus.FAILED.toString();
+                        game.setGameStatus(GameStatus.ELIMINATED.toString());
                         return totalHint + ", you reached the limit of your guesses";
                     }
                     return totalHint;
                 } else {
+                    String marks = feedback.getFeedback(wordToGuess, attempt).toString();
+                    previousHint = marks + ", " + attempt;
                     attempts = attempts + 1;
                     roundStatus = RoundStatus.COMPLETED.toString();
                     return "You guessed the word using " + getAttempts() + " guess(es)";
                 }
             }
+            roundStatus = RoundStatus.FAILED.toString();
             return "you reached the limit of your guesses";
         }
 
@@ -93,10 +103,6 @@ public class Round {
         return wordToGuess;
     }
 
-    public void setPreviousHint(String previousHint) {
-        this.previousHint = previousHint;
-    }
-
     public String getPreviousHint() {
         return previousHint;
     }
@@ -107,9 +113,9 @@ public class Round {
         return roundStatus;
     }
 
-    public void setRoundStatus(String roundStatus){this.roundStatus = roundStatus;}
+    public void setRoundStatus(String roundStatus) {this.roundStatus = roundStatus;}
 
-    public Long getId() {
-        return id;
+    public StringBuilder getString() {
+        return string;
     }
 }

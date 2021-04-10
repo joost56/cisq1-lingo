@@ -2,8 +2,7 @@ package nl.hu.cisq1.lingo.trainer.application;
 
 import nl.hu.cisq1.lingo.CiTestConfiguration;
 import nl.hu.cisq1.lingo.trainer.domain.GameStatus;
-import nl.hu.cisq1.lingo.trainer.domain.Progress;
-import nl.hu.cisq1.lingo.words.application.WordService;
+import nl.hu.cisq1.lingo.trainer.presentation.DTO.ProgressDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,27 +18,13 @@ class TrainerServiceIntegrationTest {
     @Autowired
     private TrainerService service;
 
-//    @Test
-//    @DisplayName("A new round is started when a new game is started")
-//    void providesNewGame() {
-//        Progress progress = service.startNewGame();
-//        assertEquals(GameStatus.PLAYING.toString(), progress.getMessage());
-//        assertEquals(0, progress.getScore());
-//        assertEquals(5, progress.getHints().length());
-//        assertEquals(1, progress.getRoundnumber());
-//    }
-
     @Test
-    @DisplayName("provides new round")
-    void providesNewRound() {
-
+    @DisplayName("A new round is started when a new game is started")
+    void providesNewGame() {
+        ProgressDTO progress = service.startNewGame();
+        assertEquals("Take a wild guess", progress.message);
+        assertEquals(0, progress.score);
+        assertEquals(5, progress.hints.length());
+        assertEquals(1, progress.roundnumber);
     }
-
-    @Test
-    @DisplayName("provides new guess")
-    void providesNewGuess() {
-
-    }
-
-
 }

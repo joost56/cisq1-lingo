@@ -16,14 +16,13 @@ class RoundTest {
     @DisplayName("Start round")
     void roundIsStarted(){
         Round round = new Round("woord");
-        assertEquals(round.startRound(), "w....");
+        assertEquals("w....", round.getString().toString());
     };
 
     @Test
     @DisplayName("guess")
     void guess(){
         Round round = new Round("woord");
-        round.startRound();
         assertEquals("[CORRECT, ABSENT, PRESENT, ABSENT, ABSENT], w....", round.guess("warme"));
     }
 
