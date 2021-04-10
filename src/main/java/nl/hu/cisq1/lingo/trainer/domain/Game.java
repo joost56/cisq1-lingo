@@ -35,12 +35,9 @@ public class Game {
                 gameStatus = GameStatus.WAITING_FOR_ROUND.toString();
                 round.setRoundStatus(RoundStatus.COMPLETED.toString());
             }
-    } else if (round.getRoundStatus().equals(RoundStatus.FAILED.toString())) {
+    } else if (round.getRoundStatus().equals(RoundStatus.FAILED.toString()) ||round.getRoundStatus().equals(RoundStatus.COMPLETED.toString())) {
             round.setAttempts(round.getAttempts() - 1);
-            return "deze ronde is klaar nu";
-        }else if (round.getRoundStatus().equals(RoundStatus.COMPLETED.toString())){
-            round.setAttempts(round.getAttempts() - 1);
-            return "deze ronde is klaar nu";
+            return "This round is done";
         }
         return round.getPreviousHint();
     }

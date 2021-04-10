@@ -59,7 +59,7 @@ public class Round {
                     String hint = feedback.giveHint(previousHint, wordToGuess, feedback.getFeedback(wordToGuess, attempt));
                     String marks = feedback.getFeedback(wordToGuess, attempt).toString();
                     String totalHint = marks + ", " + hint;
-                    if (marks.contains(Mark.INVALID)){
+                    if (marks.contains(Mark.INVALID.toString())){
                         previousHint = marks + ", " + wordToGuess.charAt(0) + "....";
                     } else {
                         previousHint = hint;

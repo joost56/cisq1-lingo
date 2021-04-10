@@ -17,9 +17,8 @@ public class GameTest {
     @DisplayName("give guess")
     void guessIsGiven(){
         Game game = new Game("woord");
-        Round round = game.getRounds().get(0);
         assertEquals("[CORRECT, CORRECT, CORRECT, CORRECT, CORRECT], woord", game.guess("woord", game.getRounds().get(0)));
-        round.setAttempts(4);
+        assertEquals("This round is done", game.guess("welke", game.getRounds().get(0)));
     };
 
 //    @Test
