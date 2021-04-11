@@ -1,14 +1,8 @@
 package nl.hu.cisq1.lingo.trainer.domain;
 
+import nl.hu.cisq1.lingo.trainer.presentation.DTO.ProgressDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-
-import java.util.List;
-import java.util.stream.Stream;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -17,19 +11,39 @@ public class GameTest {
     @DisplayName("give guess")
     void guessIsGiven(){
         Game game = new Game("woord");
-        Round round = game.getRounds().get(0);
         assertEquals("[CORRECT, CORRECT, CORRECT, CORRECT, CORRECT], woord", game.guess("woord", game.getRounds().get(0)));
-        round.setAttempts(4);
+        assertEquals("This round is done", game.guess("welke", game.getRounds().get(0)));
     };
 
-//    @Test
-//    @DisplayName("No playing possible in finished round")
-//    void roundIsFinished(){
-//        Game game = new Game("woord");
-//        game.guess("woord", game.getRounds().get(0));
-//        game.guess("woord", game.getRounds().get(0));
-//        assertEquals("Message: WAITING_FOR_ROUND\nScore: 25\nHints: You guessed the word using 1 guess(es)\nRoundnumber: 0", game.getProgress().toString());
-//    }
+    @Test
+    @DisplayName("No playing possible in finished round")
+    void roundIsFinished(){
+        Game game = new Game("woord");
+        game.guess("woord", game.getRounds().get(0));
+        game.guess("woord", game.getRounds().get(0));
+        assertEquals("message:You guessed right! Start a new round to continue the game.\nscore:25\nhints:[CORRECT, CORRECT, CORRECT, CORRECT, CORRECT], woord\nroundnumber:1", new ProgressDTO(game).toString());
+    }
+
+    @Test
+    @DisplayName("Test round is correctly handled when completed")
+    void RoundIsCompleted(){
+        Game game = new Game("woord");
+        game.guess("woord", game.getRounds().get(0));
+        assertEquals(25, game.getScore());
+        assertEquals(RoundStatus.COMPLETED.toString(), game.getRounds().get(0).getRoundStatus());
+        game.guess("werkt", game.getRounds().get(0));
+        assertEquals(1, game.getRounds().get(0).getAttempts());
+    }
+
+    @Test
+    @DisplayName("Starting a new round")
+    void NewRoundIsStarted() {
+        Game game = new Game("woord");
+        game.guess("woord", game.getRounds().get(0));
+        game.startNewRound("hoeden");
+        assertEquals(GameStatus.PLAYING.toString(), game.getGameStatus());
+        assertEquals(game, game.getRounds().get(1).getGame());
+    }
 
     @Test
     public void testToString()
@@ -43,12 +57,4 @@ public class GameTest {
                 '}';
         assertEquals(expected, game.toString());
     }
-
-//    @Test
-//    public void testHashcodeAndEquals() {
-//        Game game = new Game("woord");
-//        Game game1 = new Game("woord");
-//        assertTrue(game.equals(game1) && game1.equals(game));
-//        assertTrue(game.hashCode() == game1.hashCode());
-//    }
 }
