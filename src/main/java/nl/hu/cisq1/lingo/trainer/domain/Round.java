@@ -20,14 +20,13 @@ public class Round {
     @ManyToOne
     @JoinColumn(name ="FK_GameId")
     private Game game;
-    @Transient
-    private StringBuilder string = new StringBuilder();
+    @Column
+    private String totalHint;
 
     public Round (){}
 
     public Round(String wordToGuess) {
         this.wordToGuess = wordToGuess;
-        startRound();
     }
 
     public Round(String wordToGuess, int attempts) {
@@ -40,12 +39,14 @@ public class Round {
     }
 
     public String startRound() {
+        StringBuilder string = new StringBuilder();
         string.append(wordToGuess.charAt(0));
         int i = 0;
         while (i < wordToGuess.length() - 1) {
             string.append(".");
             i++;
         }
+        totalHint = string.toString();
         previousHint = string.toString();
         roundStatus = RoundStatus.IN_PROGRESS.toString();
         return string.toString();
@@ -58,9 +59,9 @@ public class Round {
                     attempts = attempts + 1;
                     String hint = feedback.giveHint(previousHint, wordToGuess, feedback.getFeedback(wordToGuess, attempt));
                     String marks = feedback.getFeedback(wordToGuess, attempt).toString();
-                    String totalHint = marks + ", " + hint;
+                    totalHint = marks + ", " + hint;
                     if (marks.contains(Mark.INVALID.toString())){
-                        previousHint = marks + ", " + wordToGuess.charAt(0) + "....";
+                        totalHint = marks + ", " + hint;
                     } else {
                         previousHint = hint;
                     }
@@ -72,7 +73,8 @@ public class Round {
                     return totalHint;
                 } else {
                     String marks = feedback.getFeedback(wordToGuess, attempt).toString();
-                    previousHint = marks + ", " + attempt;
+                    totalHint = marks + ", " + attempt;
+                    previousHint = attempt;
                     attempts = attempts + 1;
                     roundStatus = RoundStatus.COMPLETED.toString();
                     return "You guessed the word using " + getAttempts() + " guess(es)";
@@ -115,7 +117,7 @@ public class Round {
 
     public void setRoundStatus(String roundStatus) {this.roundStatus = roundStatus;}
 
-    public StringBuilder getString() {
-        return string;
+    public String getTotalHint(){
+        return totalHint;
     }
 }

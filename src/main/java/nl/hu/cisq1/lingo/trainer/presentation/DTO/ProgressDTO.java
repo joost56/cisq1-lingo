@@ -7,12 +7,14 @@ import nl.hu.cisq1.lingo.trainer.domain.RoundStatus;
 public class ProgressDTO {
     public int score;
     public String hints;
+    public int attempt;
     public int roundnumber;
     public String message;
 
     public ProgressDTO(Game game) {
         score = game.getScore();
-        hints = game.getRounds().get(game.getRounds().size()-1).getPreviousHint();
+        hints = game.getRounds().get(game.getRounds().size()-1).getTotalHint();
+        attempt = game.getRounds().get(game.getRounds().size()-1).getAttempts();
         roundnumber = game.getRounds().size();
         message = message(game);
     }

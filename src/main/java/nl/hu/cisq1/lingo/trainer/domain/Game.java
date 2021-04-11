@@ -3,7 +3,6 @@ package nl.hu.cisq1.lingo.trainer.domain;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity(name = "game")
 public class Game {
@@ -22,6 +21,7 @@ public class Game {
 
     public Game(String wordToGuess) {
         Round round = new Round(wordToGuess);
+        round.startRound();
         gameStatus = GameStatus.PLAYING.toString();
         round.setGame(this);
         rounds.add(round);
@@ -36,15 +36,16 @@ public class Game {
                 round.setRoundStatus(RoundStatus.COMPLETED.toString());
             }
     } else if (round.getRoundStatus().equals(RoundStatus.FAILED.toString()) ||round.getRoundStatus().equals(RoundStatus.COMPLETED.toString())) {
-            round.setAttempts(round.getAttempts() - 1);
+            round.setAttempts(round.getAttempts());
             return "This round is done";
         }
-        return round.getPreviousHint();
+        return round.getTotalHint();
     }
 
     public Round startNewRound(String word) {
         if (gameStatus.equals(GameStatus.WAITING_FOR_ROUND.toString())) {
             Round round = new Round(word);
+            round.startRound();
             rounds.add(round);
             setGameStatus(GameStatus.PLAYING.toString());
             round.setGame(this);
@@ -86,22 +87,6 @@ public class Game {
 
     public void setRound(Round round) {
         rounds.add(round);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Game game = (Game) o;
-        return Objects.equals(score, game.score) &&
-                Objects.equals(id, game.id) &&
-                Objects.equals(gameStatus, game.gameStatus) &&
-                Objects.equals(rounds, game.rounds);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, score, gameStatus, rounds);
     }
 
     @Override
