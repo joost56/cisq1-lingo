@@ -1,7 +1,6 @@
 package nl.hu.cisq1.lingo.trainer.application;
 
 import nl.hu.cisq1.lingo.CiTestConfiguration;
-import nl.hu.cisq1.lingo.trainer.domain.GameStatus;
 import nl.hu.cisq1.lingo.trainer.presentation.DTO.ProgressDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

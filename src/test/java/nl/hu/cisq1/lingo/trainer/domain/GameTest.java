@@ -4,7 +4,6 @@ import nl.hu.cisq1.lingo.trainer.presentation.DTO.ProgressDTO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GameTest {
     @Test
@@ -43,6 +42,13 @@ public class GameTest {
         game.startNewRound("hoeden");
         assertEquals(GameStatus.PLAYING.toString(), game.getGameStatus());
         assertEquals(game, game.getRounds().get(1).getGame());
+        assertEquals(game.getRounds().get(game.getRounds().size()-1) ,game.startNewRound("aalmoes"));
+    }
+
+    @Test
+    @DisplayName("check length of new word")
+    void NewWordLength() {
+
     }
 
     @Test
