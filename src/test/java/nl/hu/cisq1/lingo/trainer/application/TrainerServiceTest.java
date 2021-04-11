@@ -15,12 +15,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,11 +39,9 @@ class TrainerServiceTest {
         assertEquals("message:Take a wild guess\nscore:0\nhints:b....\nroundnumber:1", progress.toString());
     }
 
-    //mock wordrepo zitten geen woorden in?
-    @ParameterizedTest
-    @MethodSource("provideguessExamples")
+    @Test
     @DisplayName("Make a guess")
-    void makesAGuess(String attempt, String expected){
+    void makesAGuess(){
         WordService wordService = mock(WordService.class);
         Game game = new Game("baard");
 
@@ -59,13 +55,8 @@ class TrainerServiceTest {
         service.startNewRound(0L);
 
         when(roundRepository.findById(anyLong())).thenReturn(Optional.of(game.getRounds().get(0)));
-        ProgressDTO progress = service.guess(attempt, 0L, 0L);
-        assertEquals(expected, progress.toString());
-    }
-
-    static Stream<Arguments> provideguessExamples() {
-        return Stream.of(
-                Arguments.of("woont", "message:This word does not exist! You are eliminated.\nscore:0\nhints:b....\nroundnumber:1"));
+        ProgressDTO progress = service.guess("woont", 0L, 0L);
+        assertEquals("message:This word does not exist! You are eliminated.\nscore:0\nhints:b....\nroundnumber:1", progress.toString());
     }
 
     @Test
@@ -84,8 +75,11 @@ class TrainerServiceTest {
         TrainerService service = new TrainerService(wordService, gameRepository, roundRepository, wordRepository);
 
         ProgressDTO progress = service.startNewRound(0L);
-
         assertEquals("h.....", progress.hints);
+        when(roundRepository.findById(anyLong())).thenReturn(Optional.of(game.getRounds().get(1)));
+        service.guess("hoeden", 0L, 0L);
+        service.startNewRound(0L);
+        assertEquals(7, game.getNextWordLength());
     }
 
     @Test
@@ -138,6 +132,4 @@ class TrainerServiceTest {
                 RoundnotFoundException.class,
                 () -> service.getRoundsByGameId((long) 1));
     }
-
-
 }

@@ -5,10 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
 import java.util.List;
 import java.util.stream.Stream;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class RoundTest {
@@ -25,6 +23,7 @@ class RoundTest {
         Round round = new Round("woord");
         round.startRound();
         assertEquals("[CORRECT, ABSENT, PRESENT, ABSENT, ABSENT], w....", round.guess("warme"));
+        assertEquals("[INVALID, INVALID, INVALID, INVALID, INVALID, INVALID, INVALID], w....", round.guess("woorden"));
     }
 
     @ParameterizedTest
