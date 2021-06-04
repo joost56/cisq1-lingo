@@ -6,19 +6,17 @@ import nl.hu.cisq1.lingo.trainer.domain.*;
 import nl.hu.cisq1.lingo.trainer.domain.exception.GameIdNotFoundException;
 import nl.hu.cisq1.lingo.trainer.domain.exception.RoundIdNotFoundException;
 import nl.hu.cisq1.lingo.trainer.domain.exception.RoundnotFoundException;
-import nl.hu.cisq1.lingo.trainer.presentation.DTO.ProgressDTO;
+import nl.hu.cisq1.lingo.trainer.domain.Progress;
 import nl.hu.cisq1.lingo.words.application.WordService;
 import nl.hu.cisq1.lingo.words.data.SpringWordRepository;
 import nl.hu.cisq1.lingo.words.domain.Word;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
+
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,7 +32,7 @@ class TrainerServiceTest {
         SpringWordRepository wordRepository = mock(SpringWordRepository.class);
         TrainerService service = new TrainerService(wordService, gameRepository, roundRepository, wordRepository);
         when(wordService.provideRandomWord(5)).thenReturn("baard");
-        ProgressDTO progress = service.startNewGame();
+        Progress progress = service.startNewGame();
 
         assertEquals("message:Take a wild guess\nscore:0\nhints:b....\nroundnumber:1", progress.toString());
     }
@@ -55,7 +53,7 @@ class TrainerServiceTest {
         service.startNewRound(0L);
 
         when(roundRepository.findById(anyLong())).thenReturn(Optional.of(game.getRounds().get(0)));
-        ProgressDTO progress = service.guess("woont", 0L, 0L);
+        Progress progress = service.guess("woont", 0L, 0L);
         assertEquals("message:This word does not exist! You are eliminated.\nscore:0\nhints:b....\nroundnumber:1", progress.toString());
     }
 
@@ -74,7 +72,7 @@ class TrainerServiceTest {
         SpringWordRepository wordRepository = mock(SpringWordRepository.class);
         TrainerService service = new TrainerService(wordService, gameRepository, roundRepository, wordRepository);
 
-        ProgressDTO progress = service.startNewRound(0L);
+        Progress progress = service.startNewRound(0L);
         assertEquals("h.....", progress.hints);
         when(roundRepository.findById(anyLong())).thenReturn(Optional.of(game.getRounds().get(1)));
         service.guess("hoeden", 0L, 0L);

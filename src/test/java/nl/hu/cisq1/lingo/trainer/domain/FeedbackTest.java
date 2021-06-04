@@ -22,8 +22,6 @@ class FeedbackTest {
     void wordIsNotGuessed(){
         Feedback feedback = new Feedback("woord", List.of(Mark.ABSENT, Mark.ABSENT, Mark.ABSENT, Mark.ABSENT, Mark.ABSENT));
         assertFalse(feedback.isWordGuessed());
-        Feedback feedback1 = new Feedback("woord", List.of(Mark.ABSENT));
-        assertFalse(feedback1.isWordGuessed());
     };
 
     @Test
@@ -75,21 +73,5 @@ class FeedbackTest {
                 Arguments.of("woord", "woonde", List.of(Mark.INVALID, Mark.INVALID, Mark.INVALID, Mark.INVALID, Mark.INVALID, Mark.INVALID)),
                 Arguments.of("paard", "pampa", List.of(Mark.CORRECT, Mark.CORRECT, Mark.ABSENT, Mark.ABSENT, Mark.PRESENT)));
 
-    }
-
-    @Test
-    public void testToString()
-    {
-        Feedback feedback = new Feedback("woord", List.of(Mark.CORRECT, Mark.CORRECT, Mark.CORRECT, Mark.CORRECT, Mark.CORRECT));
-        String expected = "attempt = woord, marks = [CORRECT, CORRECT, CORRECT, CORRECT, CORRECT]" ;
-        assertEquals(expected, feedback.toString());
-    }
-
-    @Test
-    public void testHashcodeAndEquals() {
-        Feedback feedback = new Feedback();
-        Feedback feedback1 = new Feedback();
-        assertTrue(feedback.equals(feedback1) && feedback1.equals(feedback));
-        assertTrue(feedback.hashCode() == feedback1.hashCode());
     }
 }

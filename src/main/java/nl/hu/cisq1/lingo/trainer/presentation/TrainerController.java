@@ -2,7 +2,7 @@ package nl.hu.cisq1.lingo.trainer.presentation;
 
 import nl.hu.cisq1.lingo.trainer.application.TrainerService;
 import nl.hu.cisq1.lingo.trainer.domain.Game;
-import nl.hu.cisq1.lingo.trainer.presentation.DTO.ProgressDTO;
+import nl.hu.cisq1.lingo.trainer.domain.Progress;
 import nl.hu.cisq1.lingo.trainer.presentation.DTO.TrainerDTO;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +16,7 @@ public class TrainerController {
     }
 
     @PostMapping("/startGame")
-    public ProgressDTO startGame()
+    public Progress startGame()
     {
         return trainerService.startNewGame();
     }
@@ -27,13 +27,13 @@ public class TrainerController {
     }
 
     @PutMapping(value = "/startRound/{id}")
-    public ProgressDTO startRound(@PathVariable Long id)
+    public Progress startRound(@PathVariable Long id)
     {
         return trainerService.startNewRound(id);
     }
 
     @PutMapping("/guess/{roundId}/{gameId}")
-    public ProgressDTO guess(@PathVariable Long roundId, @PathVariable Long gameId, @RequestBody TrainerDTO trainerDTO)
+    public Progress guess(@PathVariable Long roundId, @PathVariable Long gameId, @RequestBody TrainerDTO trainerDTO)
     {
         return trainerService.guess(trainerDTO.attempt, roundId, gameId);
     }

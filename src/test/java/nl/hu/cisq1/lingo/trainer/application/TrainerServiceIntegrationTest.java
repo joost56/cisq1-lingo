@@ -1,7 +1,7 @@
 package nl.hu.cisq1.lingo.trainer.application;
 
 import nl.hu.cisq1.lingo.CiTestConfiguration;
-import nl.hu.cisq1.lingo.trainer.presentation.DTO.ProgressDTO;
+import nl.hu.cisq1.lingo.trainer.domain.Progress;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ class TrainerServiceIntegrationTest {
     @Test
     @DisplayName("A new round is started when a new game is started")
     void providesNewGame() {
-        ProgressDTO progress = service.startNewGame();
+        Progress progress = service.startNewGame();
         assertEquals("Take a wild guess", progress.message);
         assertEquals(0, progress.score);
         assertEquals(5, progress.hints.length());

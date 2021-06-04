@@ -1,5 +1,7 @@
 package nl.hu.cisq1.lingo.trainer.domain;
 
+import nl.hu.cisq1.lingo.words.domain.Word;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +64,17 @@ public class Game {
             return 7;
         } else {
             return 5;
+        }
+    }
+
+    public Boolean wordExists(List<Word> words, String attempt, Round round){
+        if (!words.toString().contains(attempt)){
+            round.setAttempts(round.getAttempts() + 1);
+            gameStatus = GameStatus.ELIMINATED.toString();
+            round.setRoundStatus(RoundStatus.FAILEDBYNONEXISTINGWORD.toString());
+            return false;
+        }else {
+            return true;
         }
     }
 
