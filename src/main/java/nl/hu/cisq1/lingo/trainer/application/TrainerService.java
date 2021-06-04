@@ -5,7 +5,7 @@ import nl.hu.cisq1.lingo.trainer.domain.*;
 import nl.hu.cisq1.lingo.trainer.domain.exception.GameIdNotFoundException;
 import nl.hu.cisq1.lingo.trainer.domain.exception.RoundIdNotFoundException;
 import nl.hu.cisq1.lingo.trainer.domain.exception.RoundnotFoundException;
-import nl.hu.cisq1.lingo.trainer.presentation.DTO.ProgressDTO;
+import nl.hu.cisq1.lingo.trainer.domain.Progress;
 import nl.hu.cisq1.lingo.words.application.WordService;
 import nl.hu.cisq1.lingo.words.data.SpringWordRepository;
 import nl.hu.cisq1.lingo.words.domain.Word;
@@ -18,9 +18,9 @@ import java.util.List;
 @Transactional
 public class TrainerService {
     private final WordService wordService;
-    private SpringGameRepository gameRepository;
-    private SpringRoundRepository roundRepository;
-    private SpringWordRepository wordRepository;
+    private final SpringGameRepository gameRepository;
+    private final SpringRoundRepository roundRepository;
+    private final SpringWordRepository wordRepository;
 
     public TrainerService(WordService wordService, SpringGameRepository gameRepository, SpringRoundRepository roundRepository, SpringWordRepository wordRepository
     ) {
@@ -30,11 +30,33 @@ public class TrainerService {
         this.wordRepository = wordRepository;
     }
 
-    public ProgressDTO startNewGame() {
+    public Progress startNewGame() {
         String word = wordService.provideRandomWord(5);
         Game game = new Game(word);
         gameRepository.save(game);
-        return new ProgressDTO(game);
+        return new Progress(game);
+    }
+
+    public Progress startNewRound(Long gameId) {
+        Game game = this.gameRepository.findById(gameId).orElseThrow(() -> new GameIdNotFoundException(gameId));
+        Integer wordLength = game.getNextWordLength();
+        game.startNewRound(wordService.provideRandomWord(wordLength));
+        this.gameRepository.save(game);
+        return new Progress(game);
+    }
+
+    public Progress guess(String attempt, Long roundId, Long gameId) {
+        Round round = this.roundRepository.findById(roundId).orElseThrow(() -> new RoundIdNotFoundException(roundId));
+        Game game = this.gameRepository.findById(gameId).orElseThrow(() -> new GameIdNotFoundException(gameId));
+        List<Word> words = wordRepository.findAll();
+        if (!wordExistsCheck(game, round, words, attempt)) {
+            return new Progress(game);
+        } else if (!game.getGameStatus().equals(GameStatus.ELIMINATED.toString()) && wordExistsCheck(game, round, words, attempt)) {
+            game.guess(attempt, round);
+            saveRoundAndGame(game, round);
+            return new Progress(game);
+        }
+        return new Progress(game);
     }
 
     public Game getGameById(Long id) {
@@ -49,33 +71,18 @@ public class TrainerService {
         return (List<Round>) roundRepository.countRoundsByGameId(id).orElseThrow(() -> new RoundnotFoundException());
     }
 
-    public ProgressDTO startNewRound(Long gameId) {
-        Game game = this.gameRepository.findById(gameId).orElseThrow(() -> new GameIdNotFoundException(gameId));
-        Integer wordLength = game.getNextWordLength();
-        game.startNewRound(wordService.provideRandomWord(wordLength));
+    public void saveRoundAndGame (Game game, Round round){
         this.gameRepository.save(game);
-        return new ProgressDTO(game);
+        this.roundRepository.save(round);
     }
 
-    public ProgressDTO guess(String attempt, Long roundId, Long gameId) {
-        Round round = this.roundRepository.findById(roundId).orElseThrow(() -> new RoundIdNotFoundException(roundId));
-        Game game = this.gameRepository.findById(gameId).orElseThrow(() -> new GameIdNotFoundException(gameId));
-        List<Word> words = wordRepository.findAll();
-        if (!words.toString().contains(attempt)) {
-            game.setGameStatus(GameStatus.ELIMINATED.toString());
-            round.setRoundStatus(RoundStatus.FAILEDBYNONEXISTINGWORD.toString());
-            this.gameRepository.save(game);
-            this.roundRepository.save(round);
-            return new ProgressDTO(game);
-        } else if (!game.getGameStatus().equals(GameStatus.ELIMINATED.toString()) && words.toString().contains(attempt)) {
-            game.guess(attempt, round);
-            this.gameRepository.save(game);
-            this.roundRepository.save(round);
-            return new ProgressDTO(game);
+    public Boolean wordExistsCheck(Game game, Round round, List<Word> words, String attempt){
+        if (!game.wordExists(words, attempt, round)) {
+            saveRoundAndGame(game, round);
+            return false;
         } else {
-            this.gameRepository.save(game);
-            this.roundRepository.save(round);
-            return new ProgressDTO(game);
+            saveRoundAndGame(game, round);
+            return true;
         }
     }
 }

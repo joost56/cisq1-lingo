@@ -4,11 +4,11 @@ import java.util.*;
 
 public class Feedback {
     private String attempt;
-    List<Mark> marks;
+    List<Mark> marksList;
 
     public Feedback(String attempt, List<Mark> marks) {
         this.attempt = attempt;
-        this.marks = marks;
+        this.marksList = marks;
     }
     public Feedback(String attempt){
         this.attempt = attempt;
@@ -17,88 +17,98 @@ public class Feedback {
 
     public boolean isWordGuessed(){
         int index = 0;
-        if (marks.size() == attempt.length()) {
-            while (marks.get(index) == Mark.CORRECT){
+        if (marksList.size() == attempt.length()) {
+            while (marksList.get(index) == Mark.CORRECT) {
                 index++;
-                if (index == marks.size()){
+                if (index == marksList.size()) {
                     return true;
                 }
             }
-            return false;
         }
         return false;
     }
 
     public boolean guessIsInvalid(){
         int index = 0;
-        if (attempt.length() == marks.size()){
-            while (marks.get(index) == Mark.INVALID) {
+        if (attempt.length() == marksList.size()){
+            while (marksList.get(index) == Mark.INVALID) {
                 index++;
-                if (index == marks.size()) {
+                if (index == marksList.size()) {
                     return true;
                 }
             }
-            return false;
         }
         return false;
     }
 
-    public List<Mark> getFeedback (String wordToGuess, String attempt) {
+    public List<Mark> makeInvalidFeedback(String attempt){
+        int index = 0;
+        List<Mark> invalidMarksList = new ArrayList<>();
+        while (index < attempt.length()) {
+            invalidMarksList.add(Mark.INVALID);
+            index++;
+        }
+        return invalidMarksList;
+    }
+
+    public List<Mark> makeFeedback(String wordToGuess, String attempt){
         List<Mark> marks = new ArrayList<>();
-        if (wordToGuess.length() == attempt.length()) {
-            for (int i = 0; i < wordToGuess.length(); i++) {
-                Character kar = attempt.charAt(i);
-                Character kara = wordToGuess.charAt(i);
-                if (kar.toString().equals(kara.toString())) {
-                    marks.add(Mark.CORRECT);
-                } else if (!wordToGuess.contains(kar.toString())) {
-                    marks.add(Mark.ABSENT);
-                } else{
-                    marks.add(Mark.PRESENT);
-                }
+        for (int i = 0; i < wordToGuess.length(); i++) {
+            Character charOfAttempt = attempt.charAt(i);
+            Character charOfWordToGuess = wordToGuess.charAt(i);
+            if (charOfAttempt.toString().equals(charOfWordToGuess.toString())) {
+                marks.add(Mark.CORRECT);
+            } else if (!wordToGuess.contains(charOfAttempt.toString())) {
+                marks.add(Mark.ABSENT);
+            } else {
+                marks.add(Mark.PRESENT);
             }
-        } else {
-            int index = 0;
-            List<Mark> invalidMarksList = new ArrayList<>();
-            while (index < attempt.length()) {
-                invalidMarksList.add(Mark.INVALID);
-                index++;
-            }
-            return invalidMarksList;
-            }
-        for (int index = 0; index < marks.size(); index++) {
-            int counterAttemptPresent = 0;
+        }
+        marksList = marks;
+        return marks;
+    }
+
+    public List<Mark> checkForCorrectUseOfPresent (String wordToGuess, String attempt){
+        for (int index = 0; index < marksList.size(); index++) {
             int counterWordToGuessPresent = 0;
-            if (marks.get(index) == Mark.PRESENT) {
+            int counterAttemptPresent = 0;
+            if (marksList.get(index) == Mark.PRESENT) {
                 Character letterVanDePresent = attempt.charAt(index);
                 for (int i = 0; i < attempt.length(); i++) {
                     if (attempt.charAt(i) == letterVanDePresent) {
-                        counterAttemptPresent = counterAttemptPresent+ 1;
+                        counterAttemptPresent ++;
                     }
-                }
-                for (int in = 0; in < wordToGuess.length(); in++) {
-                    if (wordToGuess.charAt(in)  == letterVanDePresent) {
-                        counterWordToGuessPresent = counterWordToGuessPresent+1;
+                    if (wordToGuess.charAt(i)  == letterVanDePresent) {
+                        counterWordToGuessPresent ++;
                     }
                 }
                 if (counterAttemptPresent != counterWordToGuessPresent) {
-                    marks.set(index, Mark.ABSENT);
-                    }
+                    marksList.set(index, Mark.ABSENT);
                 }
             }
-        return marks;
+        }
+        return marksList;
+    }
+
+    public List<Mark> getFeedback (String wordToGuess, String attempt) {
+        if (wordToGuess.length() == attempt.length()) {
+            makeFeedback(wordToGuess, attempt);
+            return checkForCorrectUseOfPresent(wordToGuess, attempt);
+        } else {
+            return makeInvalidFeedback(attempt);
+        }
     }
 
 
     public String giveHint(String previousHint, String wordToGuess, List<Mark> marks) {
-        StringBuilder stringbuilder = new StringBuilder();
+        StringBuilder hint = new StringBuilder();
         int i = 0;
         while (i < wordToGuess.length()) {
             if (marks.get(i) == Mark.CORRECT) {
-                stringbuilder.append(wordToGuess.charAt(i));
+                hint.append(wordToGuess.charAt(i));
                 i++;
             } else {
-                stringbuilder.append('.');
+                hint.append('.');
                 i++;
             }
         }
@@ -106,8 +116,8 @@ public class Feedback {
             for (int index = 0; index < previousHint.length(); index++) {
                 if (previousHint.charAt(index) != '.') {
                     theRealHint.append(previousHint.charAt(index));
-                } else if (stringbuilder.charAt(index) != '.') {
-                    theRealHint.append(stringbuilder.charAt(index));
+                } else if (hint.charAt(index) != '.') {
+                    theRealHint.append(hint.charAt(index));
                 } else {
                     theRealHint.append('.');
                 }
@@ -116,21 +126,12 @@ public class Feedback {
         }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Feedback feedback = (Feedback) o;
-        return Objects.equals(attempt, feedback.attempt) &&
-                Objects.equals(marks, feedback.marks);
-    }
-
-    @Override
     public int hashCode() {
-        return Objects.hash(attempt, marks);
+        return Objects.hash(attempt, marksList);
     }
 
     @Override
     public String toString() {
-        return "attempt = "+ attempt + ", marks = " + marks;
+        return "attempt = "+ attempt + ", marks = " + marksList;
     }
 }

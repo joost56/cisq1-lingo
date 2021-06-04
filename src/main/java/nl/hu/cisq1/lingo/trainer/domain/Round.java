@@ -39,17 +39,17 @@ public class Round {
     }
 
     public String startRound() {
-        StringBuilder string = new StringBuilder();
-        string.append(wordToGuess.charAt(0));
+        StringBuilder beginHint = new StringBuilder();
+        beginHint.append(wordToGuess.charAt(0));
         int i = 0;
         while (i < wordToGuess.length() - 1) {
-            string.append(".");
+            beginHint.append(".");
             i++;
         }
-        totalHint = string.toString();
-        previousHint = string.toString();
+        totalHint = beginHint.toString();
+        previousHint = beginHint.toString();
         roundStatus = RoundStatus.IN_PROGRESS.toString();
-        return string.toString();
+        return beginHint.toString();
     }
 
     public String guess(String attempt) {

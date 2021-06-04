@@ -55,16 +55,4 @@ class RoundTest {
         Round round = new Round("woord");
         assertEquals(0, round.getAttempts());
     }
-
-    @Test
-    public void testToString()
-    {
-        Round round = new Round();
-        String expected = "Round{" +
-                "wordToGuess='" + round.getWordToGuess() + '\'' +
-                ", attempts=" + round.getAttempts() +
-                ", previousHint='" + round.getPreviousHint() + '\'' +
-                '}';
-        assertEquals(expected, round.toString());
-    }
 }

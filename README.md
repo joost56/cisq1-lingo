@@ -2,8 +2,8 @@
 
 #Coverage:
 Class coverage 94%
-Method coverage 92%
-Line coverage 92%
+Method coverage 88%
+Line coverage 90%
 
 #Quality gate
 #Passed

@@ -1,17 +1,13 @@
-package nl.hu.cisq1.lingo.trainer.presentation.DTO;
+package nl.hu.cisq1.lingo.trainer.domain;
 
-import nl.hu.cisq1.lingo.trainer.domain.Game;
-import nl.hu.cisq1.lingo.trainer.domain.GameStatus;
-import nl.hu.cisq1.lingo.trainer.domain.RoundStatus;
-
-public class ProgressDTO {
+public class Progress {
     public int score;
     public String hints;
     public int attempt;
     public int roundnumber;
     public String message;
 
-    public ProgressDTO(Game game) {
+    public Progress(Game game) {
         score = game.getScore();
         hints = game.getRounds().get(game.getRounds().size()-1).getTotalHint();
         attempt = game.getRounds().get(game.getRounds().size()-1).getAttempts();
