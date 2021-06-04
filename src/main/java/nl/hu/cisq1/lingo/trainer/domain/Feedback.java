@@ -124,11 +124,7 @@ public class Feedback {
             }
             return theRealHint.toString();
         }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(attempt, marksList);
-    }
+        
 
     @Override
     public String toString() {
